@@ -13,25 +13,53 @@
 ---
 
 ## 🧭 Project structure (important files)
-
 ```text
 /frontend
+  ├─ public/                    # Static assets served at '/'
+  │   ├─ favicon.svg
+  │   ├─ favicon-32.png
+  │   └─ bus-stop.png (icons and fallbacks)
   ├─ src/
-  │   ├─ components/     # Reusable components (Navbar, Footer, Cards)
-  │   ├─ context/        # Auth + Theme contexts
-  │   ├─ pages/          # Routes: Home, BookTicket, Profile, LiveTracking, OperatorDashboard
-  │   ├─ utils/          # API helpers and localStorage helpers
-  │   ├─ index.css       # Global styles and custom glow utilities
-  │   └─ main.tsx        # App entry
+  │   ├─ components/           # Reusable UI pieces
+  │   │   ├─ FlipCard.tsx
+  │   │   ├─ Footer.tsx
+  │   │   ├─ GlassCard.tsx
+  │   │   ├─ GradientButton.tsx
+  │   │   ├─ Navbar.tsx
+  │   │   ├─ RouteMap.tsx
+  │   │   └─ TicketCard.tsx
+  │   ├─ context/              # React contexts (Auth, Theme)
+  │   │   └─ AuthContext.tsx
+  │   ├─ pages/                # Top-level route pages
+  │   │   ├─ BookTicket.tsx
+  │   │   ├─ Home.tsx
+  │   │   ├─ LiveTracking.tsx
+  │   │   ├─ LoginSignup.tsx
+  │   │   ├─ MyTickets.tsx
+  │   │   ├─ OperatorDashboard.tsx
+  │   │   └─ Routes.tsx
+  │   ├─ utils/
+  │   │   └─ api.ts            # API helpers & localStorage utilities
+  │   ├─ App.tsx
+  │   ├─ index.css             # Global styles and glow utilities
+  │   ├─ main.tsx              # React entry point
+  │   └─ vite-env.d.ts
+  ├─ index.html
   ├─ package.json
-  └─ vite.config.ts
+  ├─ vite.config.ts
+  ├─ tsconfig.json
+  ├─ tsconfig.app.json
+  ├─ tsconfig.node.json
+  ├─ postcss.config.js
+  ├─ tailwind.config.js
+  └─ eslint.config.js
 
 README.md (this file)
 ```
 
 ---
 
-## 🚦 Flow overview (Mermaid)
+## 🚦 Flow overview
 
 ```mermaid
 flowchart TD
@@ -43,13 +71,13 @@ flowchart TD
   E --> F[Book Ticket form]
   F --> G[Save ticket_meta to localStorage immediately]
   G --> H[Generate PDF/image async and save]
-  H --> I[Dispatch sync event -> Profile updates]
-  F --> J[If anonymous & later login -> associateAnonymousTickets() moves tickets to user index]
+  H --> I[Dispatch sync event: Profile updates]
+  F --> J[If anonymous & later login — associateAnonymousTickets moves tickets to user index]
 
   subgraph persistence
-    G --> K[ticket_<id>_meta]
-    H --> L[ticket_<id>_img]
-    K --> M[tickets_user_<userId> (index)]
+    G --> K[ticket-id-meta]
+    H --> L[ticket-id-img]
+    K --> M[tickets-user-userId-index]
   end
 ```
 
