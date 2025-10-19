@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/public/BharatBus.png" />
+  <!-- PNG fallback for older browsers -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/public/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/public/BharatBus.png" />
+  <!-- SVG fallback -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BharatBus</title>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script>
+    // Apply saved theme before React mounts to avoid flicker
+    try {
+      const t = localStorage.getItem('theme');
+      if (t === 'dark') document.documentElement.classList.add('dark');
+      else document.documentElement.classList.remove('dark');
+    } catch (e) {
+      // ignore
+    }
+  </script>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>

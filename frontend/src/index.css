@@ -1,0 +1,4773 @@
+/* stylelint-disable */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Brand and accent variables for easy tuning */
+:root {
+  /* Dark-mode defaults (used unless .light overrides) */
+  --brand-from: #f97316;
+  /* orange-500 */
+  --brand-to: #16a34a;
+  /* green-600 */
+  --brand-mid: #ffd166;
+  /* bright mid (used in light theme) */
+
+  /* RGB versions for rgba() construction */
+  --brand-from-rgb: 249, 115, 22;
+  --brand-mid-rgb: 255, 209, 102;
+  --brand-to-rgb: 22, 163, 74;
+
+  /* Accent/glow colors */
+  --accent-rgb: 255, 153, 51;
+  /* warm orange */
+  --teal-rgb: 6, 182, 212;
+  /* teal for glows */
+  /* Cinematic glow palette (cyan -> indigo) */
+  --cinematic-c1-rgb: 56, 189, 248;
+  /* cyan-400 */
+  --cinematic-c2-rgb: 99, 102, 241;
+  /* indigo-500 */
+}
+
+/* Light theme overrides: set tri-color brand gradient for .light */
+.light {
+  --brand-from: #ff7a00;
+  /* slightly warmer orange */
+  --brand-mid: #ffd166;
+  /* warm yellow */
+  --brand-to: #16a34a;
+  /* green */
+
+  --brand-from-rgb: 255, 122, 0;
+  --brand-mid-rgb: 255, 209, 102;
+  --brand-to-rgb: 22, 163, 74;
+
+  --accent-rgb: 255, 153, 51;
+  --teal-rgb: 6, 182, 212;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.12);
+  outline-offset: 2px;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.backface-hidden {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* smaller cosmic toggle variant */
+.cosmic-toggle--small {
+  width: 90px !important;
+  height: 44px !important;
+}
+
+/* Navbar glow effect */
+.nav-glow {
+  position: relative;
+}
+
+.nav-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0 transparent;
+  transition: box-shadow 240ms cubic-bezier(.2, .8, .2, 1), transform 240ms cubic-bezier(.2, .8, .2, 1);
+  pointer-events: none;
+}
+
+.nav-glow:hover::after {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12), 0 0 28px rgba(0, 0, 0, 0.04);
+  transform: translateY(-1px);
+}
+
+.nav-glow.active::after {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14), 0 0 40px rgba(0, 0, 0, 0.05);
+}
+
+/* subtler nav glow for dark mode */
+.dark .nav-glow:hover::after {
+  /* cool cyan-blue halo */
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.08), 0 0 72px rgba(59, 130, 246, 0.06);
+}
+
+.dark .nav-glow.active::after {
+  box-shadow: 0 10px 32px rgba(6, 182, 212, 0.10), 0 0 110px rgba(59, 130, 246, 0.07);
+}
+
+/* Disabled all feature-glow effects for support/FAQ cards */
+.feature-glow,
+.feature-glow::before,
+.feature-glow::after,
+.feature-glow:hover,
+.feature-glow:active::before,
+.feature-glow:focus-visible::before {
+  box-shadow: none !important;
+  background: none !important;
+  filter: none !important;
+  animation: none !important;
+  transition: none !important;
+  opacity: 1 !important;
+}
+
+/* Dark mode enhancements for orange glow */
+.dark .feature-glow::before {
+  background:
+    radial-gradient(circle at 25% 25%, rgba(255, 153, 51, 0.25), transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(249, 115, 22, 0.2), transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.12), transparent 60%);
+}
+
+.dark .feature-glow::after {
+  background:
+    conic-gradient(from 0deg,
+      rgba(255, 153, 51, 0.3) 0deg,
+      rgba(249, 115, 22, 0.25) 90deg,
+      rgba(255, 153, 51, 0.3) 180deg,
+      rgba(249, 115, 22, 0.25) 270deg,
+      rgba(255, 153, 51, 0.3) 360deg);
+}
+
+.dark .feature-glow:hover {
+  filter: drop-shadow(0 15px 35px rgba(255, 153, 51, 0.3)) drop-shadow(0 25px 60px rgba(249, 115, 22, 0.2));
+}
+
+/* Light mode enhanced orange effects */
+.light .feature-glow::before {
+  background:
+    radial-gradient(circle at 25% 25%, rgba(255, 153, 51, 0.35), transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(249, 115, 22, 0.3), transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.2), transparent 60%);
+}
+
+.light .feature-glow:hover {
+  filter: drop-shadow(0 15px 35px rgba(255, 153, 51, 0.5)) drop-shadow(0 25px 60px rgba(249, 115, 22, 0.35));
+}
+
+/* Section-specific dark glows: tuned per area for clarity and mood */
+.dark .nav-glow::after {
+  /* stronger cool cyan-blue outline in dark mode */
+  box-shadow: 0 12px 36px rgba(6, 182, 212, 0.08), 0 0 96px rgba(59, 130, 246, 0.05);
+}
+
+.dark .feature-glow::after {
+  /* cool indigo-cyan glow for feature boxes */
+  box-shadow: 0 10px 36px rgba(99, 102, 241, 0.06), 0 0 72px rgba(6, 182, 212, 0.03);
+}
+
+.dark .flip-hover-glow::after {
+  /* cyan-blue glow for interactive cards */
+  box-shadow: 0 14px 48px rgba(56, 189, 248, 0.08), 0 0 96px rgba(99, 102, 241, 0.04);
+}
+
+.dark .glow-hover::after {
+  /* general-purpose cool glow for other elements */
+  box-shadow: 0 12px 48px rgba(56, 189, 248, 0.07), 0 0 100px rgba(59, 130, 246, 0.05);
+}
+
+.dark .btn-glow-default::after {
+  box-shadow: 0 12px 36px rgba(56, 189, 248, 0.08), 0 0 90px rgba(59, 130, 246, 0.05);
+}
+
+.dark .btn-glow-subtle::after {
+  box-shadow: 0 8px 24px rgba(56, 189, 248, 0.05), 0 0 56px rgba(59, 130, 246, 0.03);
+}
+
+.dark .btn-glow-strong::after {
+  box-shadow: 0 18px 64px rgba(56, 189, 248, 0.12), 0 0 160px rgba(59, 130, 246, 0.07);
+}
+
+.dark .btn-glow-accent::after {
+  box-shadow: 0 14px 48px rgba(6, 182, 212, 0.12), 0 0 96px rgba(59, 130, 246, 0.05);
+}
+
+/* Enhanced Orange Flip Card Glow Effects */
+.flip-hover-glow {
+  position: relative;
+  transition: transform 300ms cubic-bezier(.2, .8, .2, 1), filter 300ms ease;
+}
+
+/* Multi-layered orange glow for flip cards */
+.flip-hover-glow::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 153, 51, 0.25), transparent 45%),
+    radial-gradient(circle at 70% 70%, rgba(249, 115, 22, 0.2), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.12), transparent 55%);
+  filter: blur(20px);
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 350ms cubic-bezier(.2, .8, .2, 1), transform 350ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.flip-hover-glow::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    conic-gradient(from 45deg,
+      rgba(255, 153, 51, 0.35) 0deg,
+      rgba(249, 115, 22, 0.28) 90deg,
+      rgba(255, 153, 51, 0.35) 180deg,
+      rgba(249, 115, 22, 0.28) 270deg,
+      rgba(255, 153, 51, 0.35) 360deg);
+  filter: blur(12px);
+  opacity: 0;
+  animation: flipOrangeRotate 3.5s linear infinite;
+  transition: opacity 300ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.flip-hover-glow:hover::before {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.flip-hover-glow:hover::after {
+  opacity: 1;
+}
+
+.flip-hover-glow:hover {
+  transform: translateY(-5px) scale(1.015) rotateX(2deg);
+  filter: drop-shadow(0 12px 30px rgba(255, 153, 51, 0.35)) drop-shadow(0 20px 50px rgba(249, 115, 22, 0.2));
+}
+
+/* Active/flipped state enhancement */
+.flip-hover-glow.flip-glow-on::before {
+  opacity: 1;
+  transform: scale(1.12);
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 153, 51, 0.4), transparent 45%),
+    radial-gradient(circle at 70% 70%, rgba(249, 115, 22, 0.35), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.2), transparent 55%);
+}
+
+.flip-hover-glow.flip-glow-on::after {
+  opacity: 1;
+}
+
+.flip-hover-glow.flip-glow-on {
+  transform: translateY(-8px) scale(1.025) rotateX(3deg);
+  filter: drop-shadow(0 16px 40px rgba(255, 153, 51, 0.45)) drop-shadow(0 25px 65px rgba(249, 115, 22, 0.3));
+  box-shadow:
+    0 0 25px rgba(255, 153, 51, 0.5);
+}
+
+/* Flip rotation animation */
+@keyframes flipOrangeRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dark mode adjustments */
+.dark .flip-hover-glow::before {
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 153, 51, 0.2), transparent 45%),
+    radial-gradient(circle at 70% 70%, rgba(249, 115, 22, 0.15), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.1), transparent 55%);
+}
+
+.dark .flip-hover-glow::after {
+  background:
+    conic-gradient(from 45deg,
+      rgba(255, 153, 51, 0.28) 0deg,
+      rgba(249, 115, 22, 0.22) 90deg,
+      rgba(255, 153, 51, 0.28) 180deg,
+      rgba(249, 115, 22, 0.22) 270deg,
+      rgba(255, 153, 51, 0.28) 360deg);
+}
+
+.dark .flip-hover-glow:hover {
+  filter: drop-shadow(0 12px 30px rgba(255, 153, 51, 0.25)) drop-shadow(0 20px 50px rgba(249, 115, 22, 0.15));
+}
+
+/* Light mode enhanced effects */
+.light .flip-hover-glow::before {
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 153, 51, 0.3), transparent 45%),
+    radial-gradient(circle at 70% 70%, rgba(249, 115, 22, 0.25), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.15), transparent 55%);
+}
+
+.light .flip-hover-glow:hover {
+  filter: drop-shadow(0 12px 30px rgba(255, 153, 51, 0.4)) drop-shadow(0 20px 50px rgba(249, 115, 22, 0.25));
+}
+
+/* Cooler, layered glow using radial gradients and subtle pulse */
+.glow-hover::before,
+.flip-hover-glow::before {
+  content: '';
+  position: absolute;
+  /* smaller halo extent to keep glows tidy */
+  inset: -12%;
+  z-index: -1;
+  border-radius: inherit;
+  /* cinematic layered radial gradients by default; light mode overrides remain */
+  background: radial-gradient(circle at 22% 36%, rgba(var(--cinematic-c1-rgb), 0.06), transparent 20%), radial-gradient(circle at 78% 64%, rgba(var(--cinematic-c2-rgb), 0.04), transparent 24%);
+  opacity: 0;
+  transform: scale(0.995);
+  transition: opacity 220ms cubic-bezier(.2, .8, .2, 1), transform 260ms cubic-bezier(.2, .8, .2, 1);
+  pointer-events: none;
+}
+
+.glow-hover:hover::before,
+.flip-hover-glow:hover::before,
+.glow-hover:focus-visible::before,
+.flip-hover-glow:focus-visible::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.glow-hover::after,
+.flip-hover-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: box-shadow 320ms cubic-bezier(.2, .8, .2, 1), transform 320ms cubic-bezier(.2, .8, .2, 1), opacity 220ms cubic-bezier(.2, .8, .2, 1);
+  opacity: 1;
+}
+
+.glow-hover:hover::after,
+.flip-hover-glow:hover::after,
+.glow-hover:focus-visible::after,
+.flip-hover-glow:focus-visible::after {
+  /* cinematic default shadow: cyan -> indigo layered */
+  box-shadow: 0 8px 28px rgba(var(--cinematic-c1-rgb), 0.07), 0 0 72px rgba(var(--cinematic-c2-rgb), 0.04);
+  transform: translateY(-2px);
+}
+
+.glow-hover.glow-on::after,
+.flip-hover-glow.flip-glow-on::after {
+  box-shadow: 0 12px 44px rgba(var(--cinematic-c1-rgb), 0.11), 0 0 110px rgba(var(--cinematic-c2-rgb), 0.06);
+  transform: translateY(-3.2px);
+}
+
+/* Dark mode subtle variants */
+.dark .glow-hover:hover::before,
+.dark .flip-hover-glow:hover::before,
+.dark .glow-hover:focus-visible::before,
+.dark .flip-hover-glow:focus-visible::before {
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.045), transparent 18%), radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.03), transparent 20%);
+}
+
+.dark .glow-hover:hover::after,
+.dark .flip-hover-glow:hover::after {
+  /* dark-mode cinematic stronger but tasteful */
+  box-shadow: 0 10px 36px rgba(var(--cinematic-c1-rgb), 0.085), 0 0 96px rgba(var(--cinematic-c2-rgb), 0.05);
+}
+
+@keyframes glowPulse {
+  0% {
+    transform: scale(0.98);
+    opacity: 0.95
+  }
+
+  50% {
+    transform: scale(1.02);
+    opacity: 1
+  }
+
+  100% {
+    transform: scale(0.98);
+    opacity: 0.95
+  }
+}
+
+/* General-purpose glow utility (apply to buttons, cards, links) */
+.glow-hover {
+  position: relative;
+  transition: transform 180ms ease;
+}
+
+.glow-hover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 transparent;
+  pointer-events: none;
+  transition: box-shadow 220ms ease, transform 220ms ease;
+}
+
+.glow-hover:hover::after {
+  box-shadow: 0 10px 36px rgba(var(--accent-rgb), 0.12), 0 0 64px rgba(var(--accent-rgb), 0.06);
+  transform: translateY(-3px);
+}
+
+.glow-hover.glow-on::after {
+  box-shadow: 0 18px 60px rgba(var(--accent-rgb), 0.2), 0 0 120px rgba(var(--accent-rgb), 0.08);
+  transform: translateY(-6px);
+}
+
+/* Light-mode override uses the brand tri-colors */
+.light .glow-hover:hover::after {
+  box-shadow: 0 10px 36px rgba(var(--brand-from-rgb), 0.12), 0 0 64px rgba(var(--brand-mid-rgb), 0.06);
+}
+
+.light .glow-hover.glow-on::after {
+  box-shadow: 0 18px 60px rgba(var(--brand-from-rgb), 0.22), 0 0 120px rgba(var(--brand-mid-rgb), 0.1);
+}
+
+/* Dark-mode: subtle white glow */
+.dark .glow-hover:hover::after {
+  box-shadow: 0 10px 36px rgba(255, 255, 255, 0.06), 0 0 72px rgba(255, 255, 255, 0.03);
+}
+
+.dark .glow-hover.glow-on::after {
+  box-shadow: 0 14px 48px rgba(255, 255, 255, 0.08), 0 0 96px rgba(255, 255, 255, 0.04);
+}
+
+/* Button-specific glow options */
+.btn-glow-subtle::after {
+  box-shadow: 0 8px 28px rgba(56, 189, 248, 0.07), 0 0 72px rgba(99, 102, 241, 0.04);
+  transform: translateY(-2px);
+}
+
+.btn-glow-default::after {
+  box-shadow: 0 10px 36px rgba(56, 189, 248, 0.095), 0 0 90px rgba(99, 102, 241, 0.05);
+  transform: translateY(-2.5px);
+}
+
+.btn-glow-strong::after {
+  box-shadow: 0 14px 56px rgba(56, 189, 248, 0.14), 0 0 160px rgba(99, 102, 241, 0.08);
+  transform: translateY(-3.5px);
+}
+
+.btn-glow-accent::after {
+  box-shadow: 0 12px 44px rgba(6, 182, 212, 0.11), 0 0 96px rgba(99, 102, 241, 0.05);
+  transform: translateY(-3px);
+}
+
+/* Orange glowing effects for all buttons on hover */
+button,
+button,
+input[type="button"],
+input[type="submit"],
+.btn,
+.button,
+.brand-bg {
+  position: relative;
+  transition: all 220ms ease;
+}
+
+button::after,
+input[type="button"]::after,
+input[type="submit"]::after,
+.btn::after,
+.button::after,
+.brand-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 0 0 transparent;
+  opacity: 0;
+  transition: box-shadow 220ms ease, opacity 220ms ease;
+}
+
+button:hover::after,
+input[type="button"]:hover::after,
+input[type="submit"]:hover::after,
+.btn:hover::after,
+.button:hover::after,
+.brand-bg:hover::after {
+  opacity: 1;
+  box-shadow: 0 8px 32px rgba(249, 115, 22, 0.3), 0 0 64px rgba(255, 153, 51, 0.2);
+}
+
+/* Utility to opt-out of glows entirely */
+.no-glow::before,
+.no-glow::after,
+.no-glow {
+  box-shadow: none !important;
+  background: none !important;
+}
+
+/* Respect user preference for reduced motion and reduce pulsing */
+@media (prefers-reduced-motion: reduce) {
+
+  .glow-hover::before,
+  .flip-hover-glow::before {
+    animation: none !important;
+    transition: none !important;
+    opacity: 0 !important;
+  }
+
+  .glow-hover::after,
+  .flip-hover-glow::after {
+    transition: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Flip caption: small helper text for clickable flip cards */
+.flip-caption {
+  font-size: 0.725rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.light .flip-caption {
+  color: rgba(15, 23, 42, 0.65);
+}
+
+.flip-caption .action {
+  font-weight: 600;
+  color: var(--brand-from);
+}
+
+.dark .flip-caption .action {
+  color: #fff;
+}
+
+/* India-themed toggle */
+.india-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.india-toggle:focus-visible {
+  outline: 2px solid rgba(6, 182, 212, 0.4);
+  outline-offset: 3px
+}
+
+.india-orb {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition: background 220ms ease, transform 220ms ease;
+  border: 2px solid rgba(255, 255, 255, 0.06);
+}
+
+.india-orb.light {
+  background: linear-gradient(180deg, #ffffff, #f3f3f3);
+  transform: translateY(0);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: #000
+}
+
+.india-orb.dark {
+  background: linear-gradient(180deg, #000000, #111111);
+  transform: translateY(0);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: #fff
+}
+
+.india-chakra {
+  width: 22px;
+  height: 22px;
+  color: inherit;
+  opacity: 0.95
+}
+
+.india-orb.light .india-chakra {
+  color: #000;
+}
+
+.india-orb.dark .india-chakra {
+  color: #fff;
+}
+
+/* compact variant for navbar */
+.india-toggle.compact .india-orb {
+  width: 18px;
+  height: 18px;
+  border-width: 1px
+}
+
+.india-toggle.compact .india-chakra {
+  width: 16px;
+  height: 16px
+}
+
+.india-toggle.compact {
+  padding: 2px 4px
+}
+
+/* Brand gradient outline tweak for dark mode */
+.brand-gradient {
+  transition: text-shadow 200ms ease;
+  /* default: two-stop gradient (uses variables) */
+  background-image: linear-gradient(90deg, var(--brand-from) 0%, var(--brand-to) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dark .brand-gradient {
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.12), 0 0 12px rgba(255, 255, 255, 0.06);
+  /* ensure background gradient uses dark-mode variables (same as default) */
+  background-image: linear-gradient(90deg, var(--brand-from) 0%, var(--brand-to) 100%);
+}
+
+/* Light mode: use a three-stop orange -> yellow -> green gradient for the brand
+   (removes the white stop so text keeps warm tri-color in light theme) */
+.light .brand-gradient {
+  text-shadow: none;
+  background-image: linear-gradient(90deg, var(--brand-from) 0%, var(--brand-mid) 50%, var(--brand-to) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Background variants for brand gradients */
+.brand-bg {
+  background-image: linear-gradient(90deg, var(--brand-from) 0%, var(--brand-mid) 50%, var(--brand-to) 100%);
+}
+
+/* Subtle background variant (low alpha) for selected states */
+.brand-bg-subtle {
+  background-image: linear-gradient(90deg, rgba(var(--brand-from-rgb), 0.12) 0%, rgba(var(--brand-mid-rgb), 0.08) 50%, rgba(var(--brand-to-rgb), 0.12) 100%);
+}
+
+/* Light theme: subtle outline layer for elevated elements (cards, buttons)
+   Implemented as a ::before layer so it doesn't affect layout; provides a soft
+   hairline + gentle outer glow suitable for light backgrounds. */
+.light-outline {
+  position: relative;
+}
+
+.light .light-outline::before {
+  /* inner outline removed per design request: keep element but disable any inner hairline
+     so boxes will not show inset/inside outlines in light theme. */
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: none !important;
+  transition: none !important;
+  opacity: 0 !important;
+  display: none !important;
+}
+
+.light .light-outline:active::before,
+.light .light-outline:focus-visible::before,
+.light .light-outline:hover::before {
+  /* no-op: inner outline intentionally disabled */
+  box-shadow: none !important;
+  opacity: 0 !important;
+  display: none !important;
+}
+
+/* Light-mode box utility: crisper outer hairline and subtle warm halo on hover */
+.light-box {
+  position: relative;
+}
+
+.light .light-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  /* outer hairline + gentle warm halo */
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08), 0 8px 24px rgba(var(--brand-from-rgb), 0.05);
+  transition: box-shadow 220ms ease, transform 220ms ease, opacity 180ms ease;
+  opacity: 1;
+}
+
+.light .light-box:hover::after,
+.light .light-box:focus-visible::after {
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.14), 0 14px 40px rgba(var(--brand-from-rgb), 0.08), 0 0 60px rgba(var(--brand-mid-rgb), 0.04);
+}
+
+@layer utilities {
+  .text-shadow-glow {
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+  }
+
+  .backdrop-blur-glass {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+
+  .search-outline {
+    position: relative;
+  }
+
+  .search-outline::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0.75rem;
+    pointer-events: none;
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.06), 0 8px 24px rgba(56, 189, 248, 0.04);
+    transition: box-shadow 200ms ease, transform 200ms ease;
+    opacity: 1;
+  }
+
+  .search-outline:focus-within::after,
+  .search-outline:hover::after {
+    box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.10), 0 12px 36px rgba(56, 189, 248, 0.06);
+  }
+}
+
+/* Light-theme variants for search-outline: stronger hairline and warm brand glow */
+.light .search-outline::after {
+  /* solid black hairline for maximum contrast on light backgrounds */
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.9), 0 8px 20px rgba(var(--brand-from-rgb), 0.04);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.02), rgba(var(--brand-mid-rgb), 0.01));
+  opacity: 1;
+}
+
+.light .search-outline:focus-within::after,
+.light .search-outline:hover::after {
+  /* stronger black outline on focus + warm brand halo */
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 1), 0 14px 36px rgba(var(--brand-from-rgb), 0.14), 0 0 48px rgba(var(--brand-mid-rgb), 0.06);
+  transform: translateY(-2px);
+}
+
+/* Modern UI/UX glow variants - opt-in utilities */
+.glow-neumorphism {
+  position: relative;
+}
+
+.glow-neumorphism::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 6px 6px 16px rgba(15, 23, 42, 0.06), -6px -6px 16px rgba(255, 255, 255, 0.04);
+  opacity: 1;
+  transition: box-shadow 240ms ease, transform 240ms ease;
+}
+
+.glow-neumorphism:hover::after {
+  box-shadow: 8px 8px 20px rgba(15, 23, 42, 0.08), -8px -8px 20px rgba(255, 255, 255, 0.06);
+}
+
+.glow-glassmorphism {
+  position: relative;
+}
+
+.glow-glassmorphism::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(var(--brand-from-rgb), 0.08), rgba(var(--brand-to-rgb), 0.04));
+  filter: blur(8px);
+  opacity: 0.95;
+  transition: opacity 240ms ease, transform 240ms ease;
+}
+
+.glow-glassmorphism::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.04) inset, 0 8px 32px rgba(var(--cinematic-c1-rgb), 0.06);
+}
+
+.glow-cyberpunk {
+  position: relative;
+}
+
+.glow-cyberpunk::before {
+  content: '';
+  position: absolute;
+  inset: -14%;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.15), transparent 12%), radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.12), transparent 14%);
+  mix-blend-mode: screen;
+  filter: blur(8px);
+  opacity: 0.95;
+}
+
+.glow-cyberpunk::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 12px 48px rgba(99, 102, 241, 0.18), 0 0 120px rgba(236, 72, 153, 0.12);
+}
+
+.glow-darkmode {
+  position: relative;
+}
+
+.glow-darkmode::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.04), transparent 25%);
+  filter: blur(6px);
+  opacity: 0.9;
+}
+
+.glow-darkmode::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 10px 36px rgba(255, 255, 255, 0.04), 0 0 72px rgba(59, 130, 246, 0.03);
+}
+
+.glow-interactive {
+  position: relative;
+  transition: transform 180ms ease;
+}
+
+.glow-interactive::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 8px 28px rgba(var(--cinematic-c1-rgb), 0.06), 0 0 64px rgba(var(--cinematic-c2-rgb), 0.04);
+  opacity: 0;
+  transform: translateY(0);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.glow-interactive:hover::after,
+.glow-interactive:focus-visible::after {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+/* Provide smaller utility aliases so designers can opt-in quickly */
+.neu {
+  @apply glow-neumorphism
+}
+
+.glass {
+  @apply glow-glassmorphism
+}
+
+.cyber {
+  @apply glow-cyberpunk
+}
+
+.darkglow {
+  @apply glow-darkmode
+}
+
+.i-glow {
+  @apply glow-interactive
+}
+
+/* Light-mode overrides for existing dark-focused utilities
+  When document.documentElement has .light we flip certain dark-mode classes
+  to readable light-mode values. This avoids inverting all Tailwind classes and
+  provides targeted readability fixes for components using `text-white` etc.
+*/
+.light .text-white {
+  color: #0f172a !important;
+}
+
+/* dark slate-900 */
+.light .text-white\/60 {
+  color: rgba(15, 23, 42, 0.6) !important;
+}
+
+.light .text-white\/70 {
+  color: rgba(15, 23, 42, 0.7) !important;
+}
+
+.light .text-white\/40 {
+  color: rgba(15, 23, 42, 0.4) !important;
+}
+
+.light .bg-white\/5 {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.light .bg-white {
+  background-color: #ffffff !important;
+}
+
+.light .bg-black {
+  background-color: #000000 !important;
+}
+
+.light .border-white\/10 {
+  border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+.light .shadow-xl {
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.08) !important;
+}
+
+/* Light-mode form control readability
+   Ensures inputs, textareas, selects and buttons show dark text and visible placeholders
+   when the document root has the `.light` class. These rules increase specificity and
+   use !important to override utility classes that were written for dark mode. */
+.light input,
+.light textarea,
+.light select,
+.light button,
+.light .form-control {
+  color: #0f172a !important;
+  /* slate-900 */
+}
+
+.light input::placeholder,
+.light textarea::placeholder,
+.light select::placeholder {
+  color: rgba(15, 23, 42, 0.45) !important;
+  /* placeholder in slate */
+}
+
+/* Tailwind placeholder utility overrides (escaped) */
+.light .placeholder-white\/40::placeholder {
+  color: rgba(15, 23, 42, 0.4) !important;
+}
+
+.light .placeholder-white\/60::placeholder {
+  color: rgba(15, 23, 42, 0.6) !important;
+}
+
+/* Focus and border readability for light mode */
+.light input:focus,
+.light textarea:focus,
+.light select:focus {
+  outline: none;
+  border-color: var(--brand-from) !important;
+  box-shadow: 0 0 0 6px rgba(var(--brand-from-rgb), 0.08) !important;
+}
+
+/* Book Ticket page specific form field styles for light mode */
+.light input[type="text"],
+.light input[type="email"],
+.light input[type="tel"],
+.light input[type="number"],
+.light input[type="date"],
+.light input[type="time"],
+.light select,
+.light textarea,
+.light .form-field,
+.light .input-field {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+
+.light input[type="text"]::placeholder,
+.light input[type="email"]::placeholder,
+.light input[type="tel"]::placeholder,
+.light input[type="number"]::placeholder,
+.light textarea::placeholder,
+.light .form-field::placeholder,
+.light .input-field::placeholder {
+  color: #4a4a4a !important;
+  opacity: 0.7 !important;
+}
+
+/* Make form labels visible in light mode - specifically for "From" and "To" labels */
+.light label,
+.light .form-label,
+.light .field-label {
+  color: #000000 !important;
+  font-weight: 500 !important;
+}
+
+/* Ensure text visibility for common label patterns in Book Ticket */
+.light .text-white\/60,
+.light .text-white\/70,
+.light .text-white\/80 {
+  color: #000000 !important;
+}
+
+/* Deep green -> deep blue gradient text used for button labels and emphasis */
+
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+  opacity: 1;
+  width: 16px;
+  height: 16px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Make date picker icon visible in light mode */
+.light input[type='date']::-webkit-calendar-picker-indicator {
+  filter: invert(0);
+  opacity: 1;
+  background-color: transparent;
+}
+
+/* Ensure date picker icon is always visible */
+input[type='date']::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+/* Book Ticket form optimization for better screen utilization */
+.book-ticket-container,
+.booking-form,
+.ticket-form {
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  padding: 1.5rem !important;
+}
+
+/* Optimize form field spacing and layout */
+.book-ticket-container .grid,
+.booking-form .grid,
+.ticket-form .grid {
+  gap: 1rem !important;
+}
+
+.book-ticket-container input,
+.book-ticket-container select,
+.book-ticket-container textarea,
+.booking-form input,
+.booking-form select,
+.booking-form textarea,
+.ticket-form input,
+.ticket-form select,
+.ticket-form textarea {
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem !important;
+  line-height: 1.4 !important;
+}
+
+/* Responsive form layout for Book Ticket */
+@media (max-width: 768px) {
+
+  .book-ticket-container,
+  .booking-form,
+  .ticket-form {
+    max-width: 100% !important;
+    padding: 1rem !important;
+    margin: 0 0.5rem !important;
+  }
+
+  .book-ticket-container .grid,
+  .booking-form .grid,
+  .ticket-form .grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+}
+
+/* Optimize button spacing in Book Ticket */
+.book-ticket-container button,
+.booking-form button,
+.ticket-form button {
+  padding: 0.75rem 2rem !important;
+  margin-top: 1rem !important;
+}
+
+/* Make form sections more compact */
+.book-ticket-container .space-y-6>*+*,
+.booking-form .space-y-6>*+*,
+.ticket-form .space-y-6>*+* {
+  margin-top: 1.25rem !important;
+}
+
+.book-ticket-container .space-y-4>*+*,
+.booking-form .space-y-4>*+*,
+.ticket-form .space-y-4>*+* {
+  margin-top: 0.75rem !important;
+}
+
+/* Field box visibility in light mode - Make all input/select fields clearly visible */
+.light input,
+.light select,
+.light textarea {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border: 2px solid rgba(0, 0, 0, 0.15) !important;
+  color: #1f2937 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.light input:focus,
+.light select:focus,
+.light textarea:focus {
+  border-color: rgba(249, 115, 22, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2), 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  outline: none !important;
+}
+
+.light input::placeholder,
+.light textarea::placeholder {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Field containers and form sections visibility */
+.light .form-group,
+.light .field-container,
+.light .input-group {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Navigation bar hover effects with orange glow */
+nav a,
+.nav-link,
+.navigation-item,
+.navbar a,
+.navbar-link {
+  position: relative !important;
+  transition: all 0.3s ease !important;
+}
+
+nav a:hover,
+.nav-link:hover,
+.navigation-item:hover,
+.navbar a:hover,
+.navbar-link:hover {
+  color: rgb(249, 115, 22) !important;
+  text-shadow: 0 0 8px rgba(249, 115, 22, 0.6) !important;
+}
+
+nav a:hover::before,
+.nav-link:hover::before,
+.navigation-item:hover::before,
+.navbar a:hover::before,
+.navbar-link:hover::before {
+  content: '' !important;
+  position: absolute !important;
+  top: -2px !important;
+  left: -4px !important;
+  right: -4px !important;
+  bottom: -2px !important;
+  background: linear-gradient(45deg, rgba(249, 115, 22, 0.3), rgba(255, 153, 51, 0.3)) !important;
+  border-radius: 6px !important;
+  z-index: -1 !important;
+  opacity: 0 !important;
+  animation: navGlow 0.3s ease forwards !important;
+}
+
+@keyframes navGlow {
+  to {
+    opacity: 1 !important;
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.4),
+      0 0 25px rgba(249, 115, 22, 0.2) !important;
+  }
+}
+
+/* Enhanced navigation menu items */
+.nav-menu-item,
+.navbar-menu-item {
+  padding: 0.5rem 1rem !important;
+  border-radius: 4px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.nav-menu-item:hover,
+.navbar-menu-item:hover {
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.15), rgba(255, 153, 51, 0.15)) !important;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Make From and To sections in Home navigation bar like Book Ticket fields */
+.home-search input,
+.home-search select,
+.search-form input,
+.search-form select,
+[class*="from-input"] input,
+[class*="to-input"] input,
+[class*="origin"] input,
+[class*="destination"] input {
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem !important;
+  line-height: 1.4 !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border: 2px solid rgba(0, 0, 0, 0.15) !important;
+  color: #1f2937 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 4px !important;
+}
+
+/* Compact Home search inputs: reduce vertical height and ensure dark-mode white text */
+.home-search .search-outline input,
+.home-search input {
+  padding: 0.45rem 0.75rem !important;
+  font-size: 0.94rem !important;
+  line-height: 1.1 !important;
+  border-radius: 0.65rem !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Dark mode: force white input text and paler placeholder inside Home search */
+.dark .home-search .search-outline input,
+.dark .home-search input {
+  color: #ffffff !important;
+}
+
+.dark .home-search .search-outline input::placeholder,
+.dark .home-search input::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Adjust icon sizes in the compact Home search to keep visual balance */
+.home-search .w-4,
+.home-search .w-3 {
+  width: 0.95rem !important;
+  height: 0.95rem !important;
+}
+
+.home-search input:focus,
+.home-search select:focus,
+.search-form input:focus,
+.search-form select:focus,
+[class*="from-input"] input:focus,
+[class*="to-input"] input:focus,
+[class*="origin"] input:focus,
+[class*="destination"] input:focus {
+  border-color: rgba(249, 115, 22, 0.6) !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2), 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  outline: none !important;
+}
+
+.home-search input::placeholder,
+.search-form input::placeholder,
+[class*="from-input"] input::placeholder,
+[class*="to-input"] input::placeholder,
+[class*="origin"] input::placeholder,
+[class*="destination"] input::placeholder {
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Apply Book Ticket container styling to Home search sections */
+.home-search-container,
+.search-form-container,
+[class*="from-input"],
+[class*="to-input"],
+[class*="origin-container"],
+[class*="destination-container"] {
+  padding: 0.75rem 1rem !important;
+  gap: 1rem !important;
+}
+
+/* Remove any conflicting search-outline effects for consistency */
+.search-outline::after,
+.light .search-outline::after {
+  content: none !important;
+  display: none !important;
+}
+
+.search-outline:focus-within::after,
+.search-outline:hover::after,
+.light .search-outline:focus-within::after,
+.light .search-outline:hover::after {
+  content: none !important;
+  display: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Restore outer box for From and To in light mode, remove inside rectangle */
+.search-outline {
+  position: relative;
+  /* Restore outer box appearance */
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 0.75rem !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+}
+
+/* Light mode: make outer box clearly visible */
+.light .search-outline {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Remove ONLY the inside rectangle outline (::after pseudo-element) */
+.search-outline::after,
+.light .search-outline::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  box-shadow: none !important;
+}
+
+.search-outline:focus-within::after,
+.search-outline:hover::after,
+.light .search-outline:focus-within::after,
+.light .search-outline:hover::after {
+  content: none !important;
+  display: none !important;
+  box-shadow: none !important;
+  transform: none !important;
+  opacity: 0 !important;
+}
+
+/* Keep outer container hover effects but remove inner pseudo-elements */
+.light .search-outline:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Remove any ::before pseudo-elements that create inner rectangles */
+.search-outline::before,
+.light .search-outline::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* Completely remove all inside boxes and inner layers */
+.search-outline * {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.search-outline *::before,
+.search-outline *::after,
+.light .search-outline *::before,
+.light .search-outline *::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: none !important;
+}
+
+/* Target specific inner container classes that might create inside boxes */
+.search-outline .inner-container,
+.search-outline .input-wrapper,
+.search-outline .field-wrapper,
+.search-outline .form-control,
+.search-outline .search-input-container,
+.light .search-outline .inner-container,
+.light .search-outline .input-wrapper,
+.light .search-outline .field-wrapper,
+.light .search-outline .form-control,
+.light .search-outline .search-input-container {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Remove any glassmorphism or backdrop effects from inner elements */
+.search-outline .backdrop-blur-glass,
+.search-outline .glow-glassmorphism,
+.light .search-outline .backdrop-blur-glass,
+.light .search-outline .glow-glassmorphism {
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* High specificity rules to override any existing inside box styles */
+.search-outline>*,
+.search-outline>*>*,
+.search-outline>*>*>*,
+.light .search-outline>*,
+.light .search-outline>*>*,
+.light .search-outline>*>*>* {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  outline: none !important;
+}
+
+/* Override common Tailwind classes that might create inside boxes */
+.search-outline .bg-white,
+.search-outline .bg-gray-50,
+.search-outline .bg-gray-100,
+.search-outline .bg-white\/5,
+.search-outline .bg-white\/10,
+.search-outline .bg-black\/5,
+.search-outline .border,
+.search-outline .border-gray-200,
+.search-outline .border-gray-300,
+.search-outline .shadow,
+.search-outline .shadow-sm,
+.search-outline .shadow-md,
+.search-outline .shadow-lg,
+.search-outline .rounded,
+.search-outline .rounded-md,
+.search-outline .rounded-lg,
+.light .search-outline .bg-white,
+.light .search-outline .bg-gray-50,
+.light .search-outline .bg-gray-100,
+.light .search-outline .bg-white\/5,
+.light .search-outline .bg-white\/10,
+.light .search-outline .bg-black\/5,
+.light .search-outline .border,
+.light .search-outline .border-gray-200,
+.light .search-outline .border-gray-300,
+.light .search-outline .shadow,
+.light .search-outline .shadow-sm,
+.light .search-outline .shadow-md,
+.light .search-outline .shadow-lg,
+.light .search-outline .rounded,
+.light .search-outline .rounded-md,
+.light .search-outline .rounded-lg {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* Force remove all possible pseudo-elements with maximum specificity */
+.search-outline *::before,
+.search-outline *::after,
+.search-outline>*::before,
+.search-outline>*::after,
+.search-outline>*>*::before,
+.search-outline>*>*::after,
+.light .search-outline *::before,
+.light .search-outline *::after,
+.light .search-outline>*::before,
+.light .search-outline>*::after,
+.light .search-outline>*>*::before,
+.light .search-outline>*>*::after {
+  content: "" !important;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove all pseudo-element outlines and containers */
+.search-outline::before,
+.light .search-outline::before,
+.glow-glassmorphism::before,
+.glow-glassmorphism::after,
+.backdrop-blur-glass::before,
+.backdrop-blur-glass::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove container outlines from origin/destination sections */
+[class*="origin"]::before,
+[class*="origin"]::after,
+[class*="destination"]::before,
+[class*="destination"]::after,
+[class*="search-container"]::before,
+[class*="search-container"]::after,
+[class*="input-wrapper"]::before,
+[class*="input-wrapper"]::after {
+  content: none !important;
+  display: none !important;
+  opacity: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Ensure no backdrop blur or glassmorphism effects */
+.backdrop-blur-glass {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: transparent !important;
+}
+
+/* Nuclear option: Aggressively remove all inside boxes with maximum specificity */
+.search-outline *[class*="bg-"],
+.search-outline *[class*="border"],
+.search-outline *[class*="shadow"],
+.search-outline *[class*="rounded"],
+.light .search-outline *[class*="bg-"],
+.light .search-outline *[class*="border"],
+.light .search-outline *[class*="shadow"],
+.light .search-outline *[class*="rounded"] {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+/* Override all possible container elements inside search-outline */
+.search-outline div:not(.search-outline),
+.search-outline span:not(.search-outline),
+.search-outline [class*="container"]:not(.search-outline),
+.search-outline [class*="wrapper"]:not(.search-outline),
+.light .search-outline div:not(.search-outline),
+.light .search-outline span:not(.search-outline),
+.light .search-outline [class*="container"]:not(.search-outline),
+.light .search-outline [class*="wrapper"]:not(.search-outline) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  outline: none !important;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 153, 51, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 153, 51, 0.7);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%);
+  background-size: 1000px 100%;
+}
+
+@keyframes blink {
+
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 1s steps(2, start) infinite;
+}
+
+/* Typewriter cursor: small vertical bar that inherits text color from .brand-gradient */
+.typewriter-cursor {
+  display: inline-block;
+  width: 4px;
+  height: 1.2em;
+  vertical-align: middle;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+/* From Uiverse.io by 3HugaDa3 - cosmic toggle styles */
+.cosmic-toggle {
+  position: relative;
+  width: 140px;
+  height: 70px;
+  transform-style: preserve-3d;
+  perspective: 500px;
+}
+
+.toggle {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, #1a1a2e, #16213e);
+  border-radius: 35px;
+  transition: 0.5s;
+  transform-style: preserve-3d;
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.5),
+    inset 0 0 15px rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.cosmos {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(1px 1px at 10% 10%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 20% 20%, #fff 100%, transparent),
+    radial-gradient(2px 2px at 30% 30%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 40% 40%, #fff 100%, transparent),
+    radial-gradient(2px 2px at 50% 50%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 60% 60%, #fff 100%, transparent),
+    radial-gradient(2px 2px at 70% 70%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 80% 80%, #fff 100%, transparent),
+    radial-gradient(1px 1px at 90% 90%, #fff 100%, transparent);
+  background-size: 200% 200%;
+  opacity: 0.1;
+  transition: 0.5s;
+}
+
+.toggle-orb {
+  position: absolute;
+  height: 62px;
+  width: 62px;
+  left: 4px;
+  bottom: 4px;
+  background: linear-gradient(145deg, #ff6b6b, #4ecdc4);
+  border-radius: 50%;
+  transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transform-style: preserve-3d;
+  z-index: 2;
+}
+
+.inner-orb {
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #fff, #e6e6e6);
+  transition: 0.5s;
+  overflow: hidden;
+}
+
+.inner-orb::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(from 0deg,
+      transparent 0deg,
+      rgba(0, 0, 0, 0.1) 10deg,
+      transparent 20deg);
+  animation: patternRotate 10s linear infinite;
+}
+
+.ring {
+  position: absolute;
+  inset: -3px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transition: 0.5s;
+}
+
+.toggle:checked+.slider {
+  background: linear-gradient(45deg, #16213e, #1a1a2e);
+}
+
+.toggle:checked+.slider .toggle-orb {
+  transform: translateX(70px) rotate(360deg);
+  background: linear-gradient(145deg, #4ecdc4, #45b7af);
+}
+
+.toggle:checked+.slider .inner-orb {
+  background: linear-gradient(145deg, #45b7af, #3da89f);
+  transform: scale(0.9);
+}
+
+.toggle:checked+.slider .ring {
+  border-color: rgba(78, 205, 196, 0.3);
+  animation: ringPulse 2s infinite;
+}
+
+.energy-line {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(78, 205, 196, 0.5),
+      transparent);
+  transform-origin: left;
+  opacity: 0;
+  transition: 0.5s;
+}
+
+.energy-line:nth-child(1) {
+  top: 20%;
+  transform: rotate(15deg);
+}
+
+.energy-line:nth-child(2) {
+  top: 50%;
+  transform: rotate(0deg);
+}
+
+.energy-line:nth-child(3) {
+  top: 80%;
+  transform: rotate(-15deg);
+}
+
+.toggle:checked+.slider .energy-line {
+  opacity: 1;
+  animation: energyFlow 2s linear infinite;
+}
+
+.particles {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #4ecdc4;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.toggle:checked+.slider .particle {
+  animation: particleBurst 1s ease-out infinite;
+}
+
+.particle:nth-child(1) {
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.particle:nth-child(2) {
+  left: 40%;
+  animation-delay: 0.2s;
+}
+
+.particle:nth-child(3) {
+  left: 60%;
+  animation-delay: 0.4s;
+}
+
+.particle:nth-child(4) {
+  left: 80%;
+  animation-delay: 0.6s;
+}
+
+.particle:nth-child(5) {
+  left: 30%;
+  animation-delay: 0.8s;
+}
+
+.particle:nth-child(6) {
+  left: 70%;
+  animation-delay: 1s;
+}
+
+/* Анимации */
+@keyframes ringPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 0.6;
+  }
+}
+
+@keyframes patternRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes energyFlow {
+  0% {
+    transform: scaleX(0) translateX(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scaleX(1) translateX(50%);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scaleX(0) translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes particleBurst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(calc(cos(var(--angle)) * 50px),
+        calc(sin(var(--angle)) * 50px)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Hover эффекты */
+.slider:hover .toggle-orb {
+  filter: brightness(1.05);
+  box-shadow:
+    0 0 20px rgba(0, 0, 0, 0.12),
+    0 0 40px rgba(0, 0, 0, 0.06);
+}
+
+.slider:hover .cosmos {
+  opacity: 0.2;
+  animation: cosmosPan 20s linear infinite;
+}
+
+@keyframes cosmosPan {
+  0% {
+    background-position: 0% 0%;
+  }
+
+  100% {
+    background-position: 200% 200%;
+  }
+}
+
+/* Активное состояние */
+.toggle:active+.slider .toggle-orb {
+  transform: scale(0.95);
+}
+
+/* 3D эффект при наведении */
+.cosmic-toggle:hover .slider {
+  transform: rotateX(10deg) rotateY(10deg);
+}
+
+.cosmic-toggle:hover .toggle-orb {
+  transform: translateZ(10px);
+}
+
+/* Тень */
+.toggle:checked+.slider::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--x) var(--y),
+      rgba(78, 205, 196, 0.2),
+      transparent 50%);
+  opacity: 0;
+  animation: glowFollow 2s linear infinite;
+}
+
+@keyframes glowFollow {
+
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* angle helper classes */
+.angle-30 {
+  --angle: 30deg;
+}
+
+.angle-60 {
+  --angle: 60deg;
+}
+
+.angle-90 {
+  --angle: 90deg;
+}
+
+.angle-120 {
+  --angle: 120deg;
+}
+
+.angle-150 {
+  --angle: 150deg;
+}
+
+.angle-180 {
+  --angle: 180deg;
+}
+
+/* User-request: remove box-glowing effects globally. This keeps color tokens and
+   subtle text-based hover color changes, but disables the heavy ::before/::after
+   pseudo-element box glows used across components. */
+.glow-hover::before,
+.glow-hover::after,
+.flip-hover-glow::before,
+.flip-hover-glow::after,
+.nav-glow::after,
+.feature-glow::after,
+.light-box::after {
+  box-shadow: none !important;
+  background: none !important;
+  opacity: 0 !important;
+  transform: none !important;
+}
+
+/* Ensure no nav pseudo-element produced shadows */
+.nav-glow::after {
+  content: none !important;
+}
+
+/* Orange glowing effects for all cards on hover */
+.card,
+.ticket-card,
+.glass,
+.light-box,
+div[class*="card"] {
+  position: relative;
+}
+
+.card::after,
+.ticket-card::after,
+.glass::after,
+.light-box::after,
+div[class*="card"]::after {
+  content: '';
+  position: absolute;
+  inset: -15%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle at 30% 30%, rgba(249, 115, 22, 0.15), transparent 25%), radial-gradient(circle at 70% 70%, rgba(255, 153, 51, 0.1), transparent 30%);
+  filter: blur(20px);
+  opacity: 0;
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.card:hover::after,
+.ticket-card:hover::after,
+.glass:hover::after,
+.light-box:hover::after,
+div[class*="card"]:hover::after {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* Respect .no-glow class for cards */
+.no-glow .card::after,
+.no-glow .ticket-card::after,
+.no-glow .glass::after,
+.no-glow .light-box::after,
+.no-glow div[class*="card"]::after,
+.card.no-glow::after,
+.ticket-card.no-glow::after,
+
+/* Search button orange glow - explicit utility that beats the global no-glow
+   This targets only elements with the .search-orange-glow class and forces
+   an orange halo on hover (uses brand tokens). */
+.search-orange-glow {
+  position: relative;
+}
+
+.search-orange-glow::before {
+  content: '';
+  position: absolute;
+  inset: -6%;
+  border-radius: inherit;
+  pointer-events: none;
+  /* ensure this pseudo-element is not hidden by .search-outline *::before rules */
+  display: block !important;
+  content: '' !important;
+  z-index: -1;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 153, 51, 0.32), transparent 38%), radial-gradient(circle at 70% 70%, rgba(249, 115, 22, 0.28), transparent 42%);
+  filter: blur(18px);
+  opacity: 0;
+  transition: opacity 200ms cubic-bezier(.2, .9, .2, 1), transform 200ms cubic-bezier(.2, .9, .2, 1);
+}
+
+.search-orange-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  /* ensure this pseudo-element is not hidden by .search-outline *::after rules */
+  display: block !important;
+  content: '' !important;
+  z-index: -1;
+  box-shadow: 0 12px 48px rgba(249, 115, 22, 0.26), 0 0 140px rgba(255, 153, 51, 0.18), inset 0 2px 8px rgba(255, 255, 255, 0.02);
+  transform: translateY(0);
+  opacity: 0;
+  transition: box-shadow 220ms cubic-bezier(.2, .9, .2, 1), opacity 220ms cubic-bezier(.2, .9, .2, 1), transform 220ms cubic-bezier(.2, .9, .2, 1);
+}
+
+.search-orange-glow:hover::before,
+.search-orange-glow:focus-visible::before {
+  opacity: 1 !important;
+  transform: translateY(-4px) scale(1.02);
+}
+
+.search-orange-glow:hover::after,
+.search-orange-glow:focus-visible::after {
+  opacity: 1 !important;
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 18px 80px rgba(249, 115, 22, 0.32), 0 0 200px rgba(255, 153, 51, 0.22), inset 0 4px 12px rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Additional, very-specific rule to ensure the Home search button gets a deeper outer glow.
+   This targets the GradientButton when used inside Home's search form to beat any general
+   overrides such as .search-outline or .no-glow that might suppress pseudo-elements. */
+.home-search .search-orange-glow::before,
+.home-search .search-orange-glow::after,
+.home-search .search-orange-glow:hover::before,
+.home-search .search-orange-glow:hover::after {
+  display: block !important;
+  opacity: 1 !important;
+}
+
+.home-search .search-orange-glow::before {
+  inset: -18%;
+  filter: blur(28px);
+  background: radial-gradient(circle at 30% 30%, rgba(255, 153, 51, 0.36), transparent 40%), radial-gradient(circle at 70% 70%, rgba(249, 115, 22, 0.32), transparent 45%);
+}
+
+.home-search .search-orange-glow::after {
+  inset: -6%;
+  box-shadow: 0 28px 120px rgba(249, 115, 22, 0.36), 0 0 320px rgba(255, 153, 51, 0.26), inset 0 6px 20px rgba(255, 255, 255, 0.035) !important;
+}
+
+.home-search .search-orange-glow:hover::after {
+  transform: translateY(-14px) scale(1.04) !important;
+}
+
+.light .search-orange-glow::after {
+  box-shadow: 0 12px 44px rgba(var(--brand-from-rgb), 0.22), 0 0 110px rgba(var(--brand-mid-rgb), 0.08) !important;
+}
+
+.dark .search-orange-glow::after {
+  box-shadow: 0 10px 36px rgba(255, 153, 51, 0.12), 0 0 80px rgba(249, 115, 22, 0.08) !important;
+}
+
+/* Orange edge glow utility for cards/boxes
+   Use `edge-glow-orange` on any element (card, box, row) to add a warm orange halo
+   that appears on hover/focus. Honors CSS variables defined earlier for brand colors. */
+.edge-glow-orange {
+  position: relative;
+}
+
+.edge-glow-orange::before {
+  content: '';
+  position: absolute;
+  inset: -14%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(var(--brand-from-rgb), 0.28), transparent 38%),
+    radial-gradient(circle at 70% 70%, rgba(var(--brand-mid-rgb), 0.12), transparent 44%);
+  filter: blur(22px);
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 260ms cubic-bezier(.2, .8, .2, 1), transform 260ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.edge-glow-orange::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  box-shadow: 0 10px 40px rgba(var(--brand-from-rgb), 0.22), 0 0 120px rgba(var(--brand-mid-rgb), 0.08);
+  opacity: 0;
+  transition: box-shadow 260ms cubic-bezier(.2, .8, .2, 1), opacity 260ms cubic-bezier(.2, .8, .2, 1), transform 260ms cubic-bezier(.2, .8, .2, 1);
+  transform: translateY(0);
+}
+
+.edge-glow-orange:hover::before,
+.edge-glow-orange:focus-within::before {
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+.edge-glow-orange:hover::after,
+.edge-glow-orange:focus-within::after {
+  opacity: 1;
+  transform: translateY(-8px);
+}
+
+.dark .edge-glow-orange::before {
+  background:
+    radial-gradient(circle at 30% 30%, rgba(var(--brand-from-rgb), 0.18), transparent 38%),
+    radial-gradient(circle at 70% 70%, rgba(var(--brand-mid-rgb), 0.08), transparent 44%);
+}
+
+.dark .edge-glow-orange::after {
+  box-shadow: 0 8px 32px rgba(var(--brand-from-rgb), 0.14), 0 0 90px rgba(var(--brand-mid-rgb), 0.05);
+}
+
+.glass.no-glow::after,
+.light-box.no-glow::after {
+  opacity: 0 !important;
+  background: none !important;
+}
+
+/* Respect prefers-reduced-motion for card glows */
+@media (prefers-reduced-motion: reduce) {
+
+  .card::after,
+  .ticket-card::after,
+  .glass::after,
+  .light-box::after,
+  div[class*="card"]::after {
+    transition: none !important;
+    opacity: 0 !important;
+    transform: none !important;
+  }
+}
+
+/* Apply conservative 3D hover pop to buttons and elevated boxes by default.
+   This complements the `.three-d` utility and makes common UI elements feel
+   tactile without being exaggerated. Designers can still opt-out by adding
+   `.no-glow` or `.no-3d` to a container. Respect prefers-reduced-motion. */
+
+button,
+input[type="button"],
+input[type="submit"],
+.btn,
+.button,
+.brand-bg,
+.glass,
+.light-box,
+.feature-glow,
+.glow-hover,
+.flip-hover-glow,
+.ticket-card,
+.card {
+  transform: translateZ(0);
+  transition: transform 220ms cubic-bezier(.2, .8, .2, 1), box-shadow 220ms ease;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+.btn:hover,
+.button:hover,
+.brand-bg:hover,
+.glass:hover,
+.light-box:hover,
+.feature-glow:hover,
+.glow-hover:hover,
+.flip-hover-glow:hover,
+.card:hover,
+.ticket-card:hover {
+  transform: none;
+}
+
+button:active,
+input[type="button"]:active,
+input[type="submit"]:active,
+.btn:active,
+.button:active,
+.brand-bg:active,
+.glass:active,
+.light-box:active,
+.feature-glow:active,
+.glow-hover:active,
+.flip-hover-glow:active,
+.card:active,
+.ticket-card:active {
+  transform: none;
+}
+
+/* Allow an explicit opt-out class */
+.no-3d,
+.no-3d * {
+  transform: none !important;
+  transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  button,
+  .btn,
+  .button,
+  .brand-bg,
+  .glass,
+  .light-box,
+  .feature-glow,
+  .glow-hover,
+  .flip-hover-glow,
+  .card,
+  .ticket-card {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* 3D utility: subtle pop on hover for interactive elements */
+.three-d {
+  transform: translateZ(0);
+  transition: transform 240ms cubic-bezier(.2, .8, .2, 1), box-shadow 240ms ease;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.three-d:hover,
+.glow-hover.three-d:hover,
+.flip-hover-glow.three-d:hover,
+.feature-glow.three-d:hover {
+  transform: none;
+}
+
+.three-d:active {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .three-d,
+  .three-d:hover,
+  .glow-hover.three-d:hover,
+  .flip-hover-glow.three-d:hover,
+  .feature-glow.three-d:hover {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Re-enable flip-card glows in a focused, targeted way. These override the
+   global removal above only for flip cards so the rest of the app remains
+   neutral when the global 'remove glows' rule is active. Respect `.no-glow`. */
+
+.flip-hover-glow.no-glow::before,
+.flip-hover-glow.no-glow::after,
+.flip-hover-glow.no-glow {
+  box-shadow: none !important;
+  background: none !important;
+  opacity: 0 !important;
+}
+
+.flip-hover-glow::before {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle at 30% 30%, rgba(var(--cinematic-c1-rgb), 0.06), transparent 18%), radial-gradient(circle at 70% 70%, rgba(var(--cinematic-c2-rgb), 0.04), transparent 22%);
+  filter: blur(8px);
+  opacity: 0;
+  transform: scale(0.995);
+  transition: opacity 220ms cubic-bezier(.2, .8, .2, 1), transform 260ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.flip-hover-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  box-shadow: 0 0 0 transparent;
+  opacity: 0;
+  transition: box-shadow 260ms cubic-bezier(.2, .8, .2, 1), transform 260ms cubic-bezier(.2, .8, .2, 1), opacity 220ms ease;
+}
+
+.flip-hover-glow:hover::before,
+.flip-hover-glow:focus-within::before,
+.flip-hover-glow:focus-visible::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.dark .flip-hover-glow::before {
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.05), transparent 18%), radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.03), transparent 22%);
+}
+
+.flip-hover-glow:hover::after,
+.flip-hover-glow:focus-within::after,
+.flip-hover-glow:focus-visible::after {
+  opacity: 1;
+  box-shadow: 0 10px 36px rgba(var(--cinematic-c1-rgb), 0.08), 0 0 72px rgba(var(--cinematic-c2-rgb), 0.05);
+  transform: translateY(-2px);
+}
+
+.light .flip-hover-glow::after {
+  /* warm brand glow in light mode */
+  box-shadow: 0 10px 36px rgba(var(--brand-from-rgb), 0.10), 0 0 72px rgba(var(--brand-mid-rgb), 0.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .flip-hover-glow::before,
+  .flip-hover-glow::after {
+    transition: none !important;
+    opacity: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+}
+
+/* Re-enable feature-card glows specifically for the 'Why Choose BharatBus' section.
+   These override the global removal only for feature cards so other elements remain
+   neutral when the global 'remove glows' rule is active. Respects .no-glow and
+   prefers-reduced-motion. */
+
+.feature-glow.no-glow::before,
+.feature-glow.no-glow::after,
+.feature-glow.no-glow {
+  box-shadow: none !important;
+  background: none !important;
+  opacity: 0 !important;
+}
+
+/* Enhanced Feature Glow - Consistent with Main Definition */
+.feature-glow::before {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 25% 25%, rgba(255, 153, 51, 0.3), transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(249, 115, 22, 0.25), transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.15), transparent 60%);
+  filter: blur(25px);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 400ms cubic-bezier(.2, .8, .2, 1), transform 400ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.feature-glow::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    conic-gradient(from 0deg,
+      rgba(255, 153, 51, 0.4) 0deg,
+      rgba(249, 115, 22, 0.3) 90deg,
+      rgba(255, 153, 51, 0.4) 180deg,
+      rgba(249, 115, 22, 0.3) 270deg,
+      rgba(255, 153, 51, 0.4) 360deg);
+  filter: blur(15px);
+  opacity: 0;
+  animation: orangeRotate 4s linear infinite;
+  transition: opacity 350ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.feature-glow:hover::before,
+.feature-glow:focus-within::before,
+.feature-glow:focus-visible::before {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.feature-glow:hover::after,
+.feature-glow:focus-within::after,
+.feature-glow:focus-visible::after {
+  opacity: 1;
+}
+
+/* Dark mode specific adjustments for later section */
+.dark .feature-glow::before {
+  background:
+    radial-gradient(circle at 25% 25%, rgba(255, 153, 51, 0.25), transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(249, 115, 22, 0.2), transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.12), transparent 60%);
+}
+
+.dark .feature-glow::after {
+  background:
+    conic-gradient(from 0deg,
+      rgba(255, 153, 51, 0.3) 0deg,
+      rgba(249, 115, 22, 0.25) 90deg,
+      rgba(255, 153, 51, 0.3) 180deg,
+      rgba(249, 115, 22, 0.25) 270deg,
+      rgba(255, 153, 51, 0.3) 360deg);
+}
+
+/* Scoped: lighter featured route glows when rendered in the Home page */
+.featured-routes .feature-glow::before {
+  opacity: 0.6;
+  filter: blur(18px);
+  transform: scale(1);
+}
+
+.featured-routes .feature-glow::after {
+  opacity: 0.5;
+  filter: blur(10px);
+  box-shadow: 0 6px 20px rgba(255, 153, 51, 0.12), 0 0 48px rgba(249, 115, 22, 0.08);
+}
+
+.featured-routes .feature-glow:hover::before,
+.featured-routes .feature-glow:focus-within::before {
+  opacity: 0.85;
+}
+
+.featured-routes .feature-glow:hover::after,
+.featured-routes .feature-glow:focus-within::after {
+  opacity: 0.75;
+  box-shadow: 0 10px 36px rgba(255, 153, 51, 0.16), 0 0 72px rgba(249, 115, 22, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .feature-glow::before,
+  .feature-glow::after {
+    transition: none !important;
+    opacity: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+}
+
+/* NAVBAR: make nav buttons box-shaped and glowing on hover while removing 3D
+   from navbar elements. This intentionally re-enables a targeted pseudo-element
+   glow for nav items only (overrides the global removal for clarity). */
+
+nav .nav-glow,
+nav .glow-hover,
+nav a,
+nav button {
+  /* opt out of global 3D pop inside the navbar */
+  transform: none !important;
+  transition: transform 180ms ease !important;
+}
+
+/* Style nav items as compact boxes */
+nav .nav-glow,
+nav a.nav-glow,
+nav a,
+nav button.nav-glow {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  /* rounded-md */
+  background: transparent;
+  border: 1px solid transparent;
+  position: relative;
+  color: inherit;
+}
+
+/* Re-enable a focused/hover pseudo-element for navbar items only */
+nav .nav-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: .5rem;
+  pointer-events: none;
+  box-shadow: 0 6px 20px rgba(var(--brand-from-rgb), 0.06), 0 0 40px rgba(var(--brand-mid-rgb), 0.03);
+  transition: box-shadow 220ms ease, transform 220ms ease, opacity 180ms ease;
+  opacity: 0;
+}
+
+nav .nav-glow:hover::after,
+nav .nav-glow:focus-within::after {
+  opacity: 1;
+  box-shadow: 0 10px 32px rgba(var(--brand-from-rgb), 0.12), 0 0 80px rgba(var(--brand-mid-rgb), 0.06);
+  transform: translateY(-2px);
+}
+
+/* Hover background / subtle lift for active nav buttons */
+nav .nav-glow:hover,
+nav a:hover,
+nav button:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Stronger contrast in light theme */
+.light nav .nav-glow::after {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08), 0 0 40px rgba(var(--brand-from-rgb), 0.04);
+}
+
+/* Light-mode: keep nav items visually light but transparent by default so
+   the active boxed indicator (the animated motion element) is the only box
+   shown. This allows the layoutId-based motion indicator in `Navbar.tsx` to
+   move between items and visually enclose the active option. */
+.light nav .nav-glow,
+.light nav a,
+.light nav button {
+  background: transparent;
+  color: #0f172a;
+  /* slate-900 */
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+
+/* Active nav item text / contrast */
+.light nav a.active,
+.light nav .nav-glow.active {
+  color: #071028;
+  /* darker slate for strong contrast */
+}
+
+/* Style the animated indicator element (the motion.div child with rounded-lg)
+   to act as the boxed background for the active item. We select the child
+   rounded element so it overrides utility classes applied by the motion div. */
+.light nav .nav-glow>.rounded-lg {
+  background: linear-gradient(180deg, rgba(var(--brand-from-rgb), 0.06), rgba(var(--brand-mid-rgb), 0.03)) !important;
+  border: 1px solid rgba(15, 23, 42, 0.06) !important;
+  box-shadow: 0 8px 20px rgba(2, 6, 23, 0.06) !important;
+}
+
+/* Slightly stronger halo when indicator is hovered/focused */
+.light nav .nav-glow>.rounded-lg:hover,
+.light nav .nav-glow>.rounded-lg:focus {
+  box-shadow: 0 12px 36px rgba(2, 6, 23, 0.08) !important;
+}
+
+/* Keep user avatar and small circular buttons unchanged (they keep rounded-full) */
+nav .rounded-full {
+  transform: none !important;
+}
+
+/* Indian Flag Color Vibes - Saffron, White, Green hover effects for all boxes, cards, and flip cards */
+:root {
+  /* Indian Flag Colors */
+  --saffron-rgb: 255, 153, 51;
+  /* Saffron/Orange */
+  --india-white-rgb: 255, 255, 255;
+  /* White */
+  --india-green-rgb: 19, 136, 8;
+  /* Green */
+}
+
+/* Apply Indian flag color hover effects to all cards and boxes */
+.card,
+.ticket-card,
+.feature-card,
+.service-card,
+.info-card,
+.price-card,
+.route-card,
+.bus-card,
+[class*="card"],
+.box,
+.container-box,
+.info-box,
+.feature-box,
+.service-box,
+[class*="box"],
+.flip-card,
+.flip-hover-glow {
+  position: relative;
+  transition: transform 220ms ease;
+}
+
+/* Enhanced Orange Glow System for All Cards and Boxes */
+.card::before,
+.ticket-card::before,
+.service-card::before,
+.info-card::before,
+.price-card::before,
+.route-card::before,
+.bus-card::before,
+[class*="card"]::before,
+.box::before,
+.container-box::before,
+.info-box::before,
+.service-box::before,
+[class*="box"]::before {
+  content: '';
+  position: absolute;
+  inset: -18%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 25% 30%, rgba(255, 153, 51, 0.22), transparent 45%),
+    radial-gradient(circle at 75% 70%, rgba(249, 115, 22, 0.18), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.12), transparent 55%);
+  filter: blur(18px);
+  opacity: 0;
+  transform: scale(0.94);
+  transition: opacity 350ms cubic-bezier(.2, .8, .2, 1), transform 350ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.card::after,
+.ticket-card::after,
+.service-card::after,
+.info-card::after,
+.price-card::after,
+.route-card::after,
+.bus-card::after,
+[class*="card"]::after,
+.box::after,
+.container-box::after,
+.info-box::after,
+.service-box::after,
+[class*="box"]::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    conic-gradient(from 30deg,
+      rgba(255, 153, 51, 0.32) 0deg,
+      rgba(249, 115, 22, 0.26) 90deg,
+      rgba(255, 153, 51, 0.32) 180deg,
+      rgba(249, 115, 22, 0.26) 270deg,
+      rgba(255, 153, 51, 0.32) 360deg);
+  filter: blur(14px);
+  opacity: 0;
+  animation: cardOrangeRotate 4.5s linear infinite;
+  transition: opacity 300ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.card:hover::before,
+.ticket-card:hover::before,
+.service-card:hover::before,
+.info-card:hover::before,
+.price-card:hover::before,
+.route-card:hover::before,
+.bus-card:hover::before,
+[class*="card"]:hover::before,
+.box:hover::before,
+.container-box:hover::before,
+.info-box:hover::before,
+.service-box:hover::before,
+[class*="box"]:hover::before {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.card:hover::after,
+.ticket-card:hover::after,
+.service-card:hover::after,
+.info-card:hover::after,
+.price-card:hover::after,
+.route-card:hover::after,
+.bus-card:hover::after,
+[class*="card"]:hover::after,
+.box:hover::after,
+.container-box:hover::after,
+.info-box:hover::after,
+.service-box:hover::after,
+[class*="box"]:hover::after {
+  opacity: 1;
+}
+
+.card:hover,
+.ticket-card:hover,
+.service-card:hover,
+.info-card:hover,
+.price-card:hover,
+.route-card:hover,
+.bus-card:hover,
+[class*="card"]:hover,
+.box:hover,
+.container-box:hover,
+.info-box:hover,
+.service-box:hover,
+[class*="box"]:hover {
+  transform: translateY(-4px) scale(1.01);
+  filter: drop-shadow(0 10px 25px rgba(255, 153, 51, 0.3)) drop-shadow(0 18px 45px rgba(249, 115, 22, 0.2));
+  box-shadow:
+    0 0 20px rgba(255, 153, 51, 0.35);
+}
+
+/* Card rotation animation */
+@keyframes cardOrangeRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Removed tricolor border effect - keeping only shadow glow */
+
+/* Dark mode: Enhanced Indian flag colors */
+.dark .card::after,
+.dark .ticket-card::after,
+.dark [class*="card"]::after,
+.dark .box::after,
+.dark [class*="box"]::after,
+.dark .flip-card::after,
+.dark .flip-hover-glow::after {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(var(--saffron-rgb), 0.18), transparent 25%),
+    radial-gradient(circle at 50% 50%, rgba(var(--india-white-rgb), 0.12), transparent 30%),
+    radial-gradient(circle at 80% 80%, rgba(var(--india-green-rgb), 0.15), transparent 25%);
+}
+
+/* Light mode: Softer Indian flag colors */
+.light .card::after,
+.light .ticket-card::after,
+.light [class*="card"]::after,
+.light .box::after,
+.light [class*="box"]::after,
+.light .flip-card::after,
+.light .flip-hover-glow::after {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(var(--saffron-rgb), 0.12), transparent 25%),
+    radial-gradient(circle at 50% 50%, rgba(var(--india-white-rgb), 0.06), transparent 30%),
+    radial-gradient(circle at 80% 80%, rgba(var(--india-green-rgb), 0.10), transparent 25%);
+}
+
+/* Patriotic pulse animation on active/focus */
+@keyframes patrioticPulse {
+
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(var(--saffron-rgb), 0.2),
+      0 0 0 2px rgba(var(--india-white-rgb), 0.1),
+      0 0 0 3px rgba(var(--india-green-rgb), 0.2);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 2px rgba(var(--saffron-rgb), 0.4),
+      0 0 0 4px rgba(var(--india-white-rgb), 0.2),
+      0 0 0 6px rgba(var(--india-green-rgb), 0.4);
+  }
+}
+
+.card:active,
+.flip-card:active,
+[class*="card"]:active,
+.box:active,
+[class*="box"]:active {
+  animation: patrioticPulse 1s ease-in-out;
+}
+
+/* --------------------------------------------------------------------------
+   Force visible outlines for all common box/container elements in light mode
+   This ensures cards, glass panels, boxes and rounded containers show a clear
+   black hairline border when the document root has the `.light` class.
+   We target the common component classes used across the app (GlassCard,
+   card/box variants, search-outline, backdrop-blur containers and rounded
+   utilities). Use a subtle 1.5-2px hairline for good contrast on light
+   backgrounds while avoiding overly heavy visuals.
+-----------------------------------------------------------------------------*/
+.light .glass,
+.light .card,
+.light .ticket-card,
+.light .feature-card,
+.light .feature-glow,
+.light .service-card,
+.light .info-card,
+.light .price-card,
+.light .route-card,
+.light .box,
+.light .container-box,
+.light .info-box,
+.light .service-box,
+.light .flip-card,
+.light .flip-hover-glow,
+.light .ticket-card,
+.light .light-box,
+.light .search-outline,
+.light .backdrop-blur-md,
+.light .rounded-2xl,
+.light .rounded-xl,
+.light .rounded-lg,
+.light [class*="bg-white"],
+.light [class*="bg-white/"] {
+  border: 1.5px solid rgba(0, 0, 0, 0.14) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Make sure nav/footer wrapper containers also get a visible outline in light mode */
+/* above we intentionally avoided global header/nav/footer rules to prevent
+   accidental heavy borders on layout elements. Targeted containers are used
+   instead (GlassCard, card, box, search-outline). */
+
+/* Respect .no-glow class for opt-out */
+.no-glow .card::after,
+.no-glow .ticket-card::after,
+.no-glow [class*="card"]::after,
+.no-glow .box::after,
+.no-glow [class*="box"]::after,
+.no-glow .flip-card::after,
+.card.no-glow::after,
+.ticket-card.no-glow::after,
+.box.no-glow::after,
+.flip-card.no-glow::after {
+  opacity: 0 !important;
+  background: none !important;
+}
+
+/* Different Glowing Effect Variants */
+
+/* Variant 1: Rotating Glow Effect */
+.glow-rotate {
+  position: relative;
+}
+
+.glow-rotate::after {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background: conic-gradient(from 0deg,
+      rgba(var(--saffron-rgb), 0.2) 0deg,
+      rgba(var(--india-white-rgb), 0.1) 120deg,
+      rgba(var(--india-green-rgb), 0.2) 240deg,
+      rgba(var(--saffron-rgb), 0.2) 360deg);
+  filter: blur(25px);
+  opacity: 0;
+  animation: rotateGlow 3s linear infinite;
+  transition: opacity 400ms ease;
+}
+
+.glow-rotate:hover::after {
+  opacity: 1;
+}
+
+@keyframes rotateGlow {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Variant 2: Pulsing Waves Effect */
+.glow-pulse {
+  position: relative;
+}
+
+.glow-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at center, rgba(var(--saffron-rgb), 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at center, rgba(var(--india-green-rgb), 0.2) 20%, transparent 70%);
+  filter: blur(30px);
+  opacity: 0;
+  animation: pulseWave 2s ease-in-out infinite;
+  transition: opacity 300ms ease;
+}
+
+.glow-pulse:hover::after {
+  opacity: 1;
+}
+
+@keyframes pulseWave {
+
+  0%,
+  100% {
+    transform: scale(0.8);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+/* Variant 3: Flowing Light Effect */
+.glow-flow {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-flow::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: -1;
+  background: linear-gradient(45deg,
+      transparent 30%,
+      rgba(var(--saffron-rgb), 0.3) 50%,
+      rgba(var(--india-white-rgb), 0.2) 60%,
+      rgba(var(--india-green-rgb), 0.3) 70%,
+      transparent 90%);
+  filter: blur(20px);
+  opacity: 0;
+  transform: translateX(-100%) translateY(-100%);
+  transition: opacity 300ms ease;
+}
+
+.glow-flow:hover::after {
+  opacity: 1;
+  animation: flowLight 2s ease-in-out infinite;
+}
+
+@keyframes flowLight {
+  0% {
+    transform: translateX(-100%) translateY(-100%);
+  }
+
+  100% {
+    transform: translateX(100%) translateY(100%);
+  }
+}
+
+/* Variant 4: Sparkle Effect */
+.glow-sparkle {
+  position: relative;
+}
+
+.glow-sparkle::before,
+.glow-sparkle::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.glow-sparkle::before {
+  top: 10%;
+  left: 20%;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(var(--saffron-rgb), 0.8) 0%, transparent 70%);
+  filter: blur(2px);
+}
+
+.glow-sparkle::after {
+  top: 70%;
+  right: 15%;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, rgba(var(--india-green-rgb), 0.8) 0%, transparent 70%);
+  filter: blur(3px);
+}
+
+.glow-sparkle:hover::before,
+.glow-sparkle:hover::after {
+  opacity: 1;
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+
+  0%,
+  100% {
+    transform: scale(0.5);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+/* Variant 5: Breathing Glow */
+.glow-breathe {
+  position: relative;
+}
+
+.glow-breathe::after {
+  content: '';
+  position: absolute;
+  inset: -15%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(var(--saffron-rgb), 0.15), transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(var(--india-green-rgb), 0.15), transparent 40%);
+  filter: blur(25px);
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.glow-breathe:hover::after {
+  opacity: 1;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+
+  0%,
+  100% {
+    transform: scale(0.9);
+    filter: blur(25px);
+  }
+
+  50% {
+    transform: scale(1.1);
+    filter: blur(35px);
+  }
+}
+
+/* Variant 6: Electric Border Effect */
+.glow-electric {
+  position: relative;
+}
+
+.glow-electric::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background: linear-gradient(90deg,
+      rgba(var(--saffron-rgb), 0.5) 0%,
+      rgba(var(--india-white-rgb), 0.3) 25%,
+      rgba(var(--india-green-rgb), 0.5) 50%,
+      rgba(var(--india-white-rgb), 0.3) 75%,
+      rgba(var(--saffron-rgb), 0.5) 100%);
+  opacity: 0;
+  filter: blur(1px);
+  transition: opacity 300ms ease;
+}
+
+.glow-electric:hover::after {
+  opacity: 1;
+  animation: electricFlow 1s linear infinite;
+}
+
+@keyframes electricFlow {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Apply different glow variants to different card types */
+.ticket-card,
+.price-card {
+  position: relative;
+}
+
+.ticket-card::after,
+.price-card::after {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background: conic-gradient(from 0deg,
+      rgba(var(--saffron-rgb), 0.2) 0deg,
+      rgba(var(--india-white-rgb), 0.1) 120deg,
+      rgba(var(--india-green-rgb), 0.2) 240deg,
+      rgba(var(--saffron-rgb), 0.2) 360deg);
+  filter: blur(25px);
+  opacity: 0;
+  animation: rotateGlow 3s linear infinite;
+  transition: opacity 400ms ease;
+}
+
+.ticket-card:hover::after,
+.price-card:hover::after {
+  opacity: 1;
+}
+
+.feature-card::after,
+.service-card::after {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse at center, rgba(var(--saffron-rgb), 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at center, rgba(var(--india-green-rgb), 0.2) 20%, transparent 70%);
+  filter: blur(30px);
+  opacity: 0;
+  animation: pulseWave 2s ease-in-out infinite;
+  transition: opacity 300ms ease;
+}
+
+.feature-card:hover::after,
+.service-card:hover::after {
+  opacity: 1;
+}
+
+/* Flowing light effect for info and route cards */
+.info-card,
+.route-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.info-card::after,
+.route-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: -1;
+  background: linear-gradient(45deg,
+      transparent 30%,
+      rgba(var(--saffron-rgb), 0.3) 50%,
+      rgba(var(--india-white-rgb), 0.2) 60%,
+      rgba(var(--india-green-rgb), 0.3) 70%,
+      transparent 90%);
+  filter: blur(20px);
+  opacity: 0;
+  transform: translateX(-100%) translateY(-100%);
+  transition: opacity 300ms ease;
+}
+
+.info-card:hover::after,
+.route-card:hover::after {
+  opacity: 1;
+  animation: flowLight 2s ease-in-out infinite;
+}
+
+/* Sparkle effect for bus cards */
+.bus-card {
+  position: relative;
+}
+
+.bus-card::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 20%;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--saffron-rgb), 0.8) 0%, transparent 70%);
+  filter: blur(2px);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.bus-card::after {
+  content: '';
+  position: absolute;
+  top: 70%;
+  right: 15%;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--india-green-rgb), 0.8) 0%, transparent 70%);
+  filter: blur(3px);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.bus-card:hover::before,
+.bus-card:hover::after {
+  opacity: 1;
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+/* Breathing effect for container and feature boxes */
+.container-box::after,
+.feature-box::after {
+  content: '';
+  position: absolute;
+  inset: -15%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(var(--saffron-rgb), 0.15), transparent 40%),
+    radial-gradient(circle at 70% 70%, rgba(var(--india-green-rgb), 0.15), transparent 40%);
+  filter: blur(25px);
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+
+.container-box:hover::after,
+.feature-box:hover::after {
+  opacity: 1;
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* Electric border effect for info and service boxes */
+.info-box::after,
+.service-box::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background: linear-gradient(90deg,
+      rgba(var(--saffron-rgb), 0.5) 0%,
+      rgba(var(--india-white-rgb), 0.3) 25%,
+      rgba(var(--india-green-rgb), 0.5) 50%,
+      rgba(var(--india-white-rgb), 0.3) 75%,
+      rgba(var(--saffron-rgb), 0.5) 100%);
+  opacity: 0;
+  filter: blur(1px);
+  transition: opacity 300ms ease;
+  background-size: 200% 100%;
+}
+
+.info-box:hover::after,
+.service-box:hover::after {
+  opacity: 1;
+  animation: electricFlow 1s linear infinite;
+}
+
+/* Random glow assignment for generic cards and boxes */
+.card:nth-child(odd)::after {
+  background: conic-gradient(from 0deg,
+      rgba(var(--saffron-rgb), 0.2) 0deg,
+      rgba(var(--india-white-rgb), 0.1) 120deg,
+      rgba(var(--india-green-rgb), 0.2) 240deg,
+      rgba(var(--saffron-rgb), 0.2) 360deg);
+  animation: rotateGlow 3s linear infinite;
+}
+
+.card:nth-child(even)::after {
+  background:
+    radial-gradient(ellipse at center, rgba(var(--saffron-rgb), 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at center, rgba(var(--india-green-rgb), 0.2) 20%, transparent 70%);
+  animation: pulseWave 2s ease-in-out infinite;
+}
+
+.box:nth-child(3n+1)::after {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.box:nth-child(3n+2)::after {
+  background: linear-gradient(90deg,
+      rgba(var(--saffron-rgb), 0.5) 0%,
+      rgba(var(--india-white-rgb), 0.3) 25%,
+      rgba(var(--india-green-rgb), 0.5) 50%,
+      rgba(var(--india-white-rgb), 0.3) 75%,
+      rgba(var(--saffron-rgb), 0.5) 100%);
+  background-size: 200% 100%;
+  animation: electricFlow 1s linear infinite;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+
+  .card::after,
+  .ticket-card::after,
+  [class*="card"]::after,
+  .box::after,
+  [class*="box"]::after,
+  .flip-card::after,
+  .flip-hover-glow::after,
+  .glow-rotate::after,
+  .glow-pulse::after,
+  .glow-flow::after,
+  .glow-sparkle::before,
+  .glow-sparkle::after,
+  .glow-breathe::after,
+  .glow-electric::after {
+    transition: none !important;
+    opacity: 0 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .card:active,
+  .flip-card:active,
+  [class*="card"]:active,
+  .box:active,
+  [class*="box"]:active {
+    animation: none !important;
+  }
+}
+
+/* ==================================================================
+   COMPREHENSIVE OUTSIDE GLOWING EFFECTS ON HOVER
+   ================================================================== */
+
+/* Global button outside glow effects */
+button,
+input[type="submit"],
+input[type="button"],
+.btn,
+.button,
+[role="button"] {
+  position: relative;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button::before,
+input[type="submit"]::before,
+input[type="button"]::before,
+.btn::before,
+.button::before,
+[role="button"]::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+      rgba(var(--saffron-rgb), 0.2) 0%,
+      rgba(var(--india-white-rgb), 0.1) 50%,
+      rgba(var(--india-green-rgb), 0.2) 100%);
+  filter: blur(12px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 300ms ease, transform 300ms ease;
+  pointer-events: none;
+}
+
+button:hover::before,
+input[type="submit"]:hover::before,
+input[type="button"]:hover::before,
+.btn:hover::before,
+.button:hover::before,
+[role="button"]:hover::before {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* Enhanced glow for primary buttons */
+.brand-bg::before,
+button.bg-orange-500::before,
+button.bg-green-600::before,
+.primary-btn::before {
+  background: linear-gradient(135deg,
+      rgba(var(--saffron-rgb), 0.4) 0%,
+      rgba(var(--india-white-rgb), 0.2) 50%,
+      rgba(var(--india-green-rgb), 0.4) 100%);
+  filter: blur(16px);
+}
+
+/* Navigation items outside glow */
+nav a,
+nav button,
+.nav-link,
+.navigation-item,
+.navbar-item {
+  position: relative;
+}
+
+nav a::before,
+nav button::before,
+.nav-link::before,
+.navigation-item::before,
+.navbar-item::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 8px;
+  background: linear-gradient(45deg,
+      rgba(var(--saffron-rgb), 0.15),
+      rgba(var(--india-green-rgb), 0.15));
+  filter: blur(10px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 250ms ease, transform 250ms ease;
+  pointer-events: none;
+}
+
+nav a:hover::before,
+nav button:hover::before,
+.nav-link:hover::before,
+.navigation-item:hover::before,
+.navbar-item:hover::before {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Form input outside glow effects */
+input:not([type="submit"]):not([type="button"]),
+textarea,
+select {
+  position: relative;
+  transition: all 250ms ease;
+}
+
+input:not([type="submit"]):not([type="button"])::before,
+textarea::before,
+select::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  background: linear-gradient(90deg,
+      rgba(var(--saffron-rgb), 0.1) 0%,
+      rgba(var(--india-white-rgb), 0.05) 50%,
+      rgba(var(--india-green-rgb), 0.1) 100%);
+  filter: blur(8px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+input:not([type="submit"]):not([type="button"]):focus::before,
+textarea:focus::before,
+select:focus::before {
+  opacity: 1;
+}
+
+/* Enhanced focus glow for form fields */
+input:not([type="submit"]):not([type="button"]):focus,
+textarea:focus,
+select:focus {
+  box-shadow:
+    0 0 0 2px rgba(var(--saffron-rgb), 0.3),
+    0 0 20px rgba(var(--saffron-rgb), 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Link outside glow effects */
+a:not(nav a):not(.no-glow) {
+  position: relative;
+  transition: all 200ms ease;
+}
+
+a:not(nav a):not(.no-glow)::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 4px;
+  background: radial-gradient(circle,
+      rgba(var(--saffron-rgb), 0.15) 0%,
+      transparent 70%);
+  filter: blur(6px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+a:not(nav a):not(.no-glow):hover::before {
+  opacity: 1;
+}
+
+/* Interactive element glow (dropdowns, toggles, etc.) */
+.dropdown,
+.toggle,
+.switch,
+.slider,
+[role="combobox"],
+[role="listbox"] {
+  position: relative;
+}
+
+.dropdown::before,
+.toggle::before,
+.switch::before,
+.slider::before,
+[role="combobox"]::before,
+[role="listbox"]::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg,
+      rgba(var(--saffron-rgb), 0.15) 0deg,
+      rgba(var(--india-white-rgb), 0.1) 120deg,
+      rgba(var(--india-green-rgb), 0.15) 240deg,
+      rgba(var(--saffron-rgb), 0.15) 360deg);
+  filter: blur(10px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.dropdown:hover::before,
+.toggle:hover::before,
+.switch:hover::before,
+.slider:hover::before,
+[role="combobox"]:hover::before,
+[role="listbox"]:hover::before {
+  opacity: 1;
+}
+
+/* Modal and dialog outside glow */
+.modal,
+.dialog,
+[role="dialog"],
+[role="alertdialog"] {
+  position: relative;
+}
+
+.modal::before,
+.dialog::before,
+[role="dialog"]::before,
+[role="alertdialog"]::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(var(--saffron-rgb), 0.08), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(var(--india-green-rgb), 0.08), transparent 40%);
+  filter: blur(25px);
+  opacity: 1;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Tab and menu item glow */
+[role="tab"],
+[role="menuitem"],
+.tab,
+.menu-item {
+  position: relative;
+  transition: all 200ms ease;
+}
+
+[role="tab"]::before,
+[role="menuitem"]::before,
+.tab::before,
+.menu-item::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 6px;
+  background: linear-gradient(45deg,
+      rgba(var(--saffron-rgb), 0.12),
+      rgba(var(--india-green-rgb), 0.12));
+  filter: blur(8px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+[role="tab"]:hover::before,
+[role="menuitem"]:hover::before,
+.tab:hover::before,
+.menu-item:hover::before,
+[role="tab"][aria-selected="true"]::before {
+  opacity: 1;
+}
+
+/* Badge and chip glow effects */
+.badge,
+.chip,
+.tag,
+.label {
+  position: relative;
+  transition: all 200ms ease;
+}
+
+.badge::before,
+.chip::before,
+.tag::before,
+.label::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  background: radial-gradient(ellipse,
+      rgba(var(--saffron-rgb), 0.2) 0%,
+      rgba(var(--india-green-rgb), 0.2) 100%);
+  filter: blur(6px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+.badge:hover::before,
+.chip:hover::before,
+.tag:hover::before,
+.label:hover::before {
+  opacity: 1;
+}
+
+/* Tooltip glow effect */
+.tooltip,
+[role="tooltip"] {
+  position: relative;
+}
+
+.tooltip::before,
+[role="tooltip"]::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle, rgba(var(--saffron-rgb), 0.15) 0%, transparent 60%);
+  filter: blur(12px);
+  opacity: 1;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Image and media container glow */
+img:hover,
+.image-container:hover,
+.media-container:hover,
+figure:hover {
+  filter: drop-shadow(0 8px 16px rgba(var(--saffron-rgb), 0.2)) drop-shadow(0 0 20px rgba(var(--india-green-rgb), 0.15));
+  transition: filter 300ms ease;
+}
+
+/* Progress bar and slider glow */
+progress,
+input[type="range"],
+.progress-bar,
+.range-slider {
+  position: relative;
+}
+
+progress::before,
+input[type="range"]::before,
+.progress-bar::before,
+.range-slider::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  background: linear-gradient(90deg,
+      rgba(var(--saffron-rgb), 0.15) 0%,
+      rgba(var(--india-green-rgb), 0.15) 100%);
+  filter: blur(8px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+progress:hover::before,
+input[type="range"]:hover::before,
+.progress-bar:hover::before,
+.range-slider:hover::before {
+  opacity: 1;
+}
+
+/* Search container enhanced glow */
+.search-container,
+.search-box,
+[role="searchbox"] {
+  position: relative;
+}
+
+.search-container::before,
+.search-box::before,
+[role="searchbox"]::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 25% 25%, rgba(var(--saffron-rgb), 0.2), transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(var(--india-green-rgb), 0.2), transparent 50%);
+  filter: blur(12px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 300ms ease, transform 300ms ease;
+  pointer-events: none;
+}
+
+.search-container:focus-within::before,
+.search-box:focus-within::before,
+[role="searchbox"]:focus-within::before {
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+/* Icon glow effects */
+.icon,
+svg:not(.no-glow),
+[class*="icon"]:not(.no-glow) {
+  position: relative;
+  transition: filter 200ms ease;
+}
+
+.icon:hover,
+svg:not(.no-glow):hover,
+[class*="icon"]:not(.no-glow):hover {
+  filter: drop-shadow(0 0 8px rgba(var(--saffron-rgb), 0.4)) drop-shadow(0 0 12px rgba(var(--india-green-rgb), 0.3));
+}
+
+/* Avatar and profile picture glow */
+.avatar,
+.profile-pic,
+[class*="avatar"] {
+  position: relative;
+  transition: filter 250ms ease;
+}
+
+.avatar:hover,
+.profile-pic:hover,
+[class*="avatar"]:hover {
+  filter: drop-shadow(0 0 15px rgba(var(--saffron-rgb), 0.3)) drop-shadow(0 0 25px rgba(var(--india-green-rgb), 0.2));
+}
+
+/* Logo glow effect */
+.logo,
+[class*="logo"] {
+  position: relative;
+  transition: filter 300ms ease;
+}
+
+.logo:hover,
+[class*="logo"]:hover {
+  filter: drop-shadow(0 0 20px rgba(var(--saffron-rgb), 0.4)) drop-shadow(0 0 30px rgba(var(--india-green-rgb), 0.3)) drop-shadow(0 0 40px rgba(var(--india-white-rgb), 0.1));
+}
+
+/* Accordion and collapsible glow */
+.accordion,
+.collapsible,
+details {
+  position: relative;
+}
+
+.accordion::before,
+.collapsible::before,
+details::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: inherit;
+  background: linear-gradient(135deg,
+      rgba(var(--saffron-rgb), 0.1) 0%,
+      rgba(var(--india-white-rgb), 0.05) 50%,
+      rgba(var(--india-green-rgb), 0.1) 100%);
+  filter: blur(10px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 250ms ease;
+  pointer-events: none;
+}
+
+.accordion:hover::before,
+.collapsible:hover::before,
+details:hover::before {
+  opacity: 1;
+}
+
+/* Notification and alert glow */
+.notification,
+.alert,
+[role="alert"],
+[role="status"] {
+  position: relative;
+}
+
+.notification::before,
+.alert::before,
+[role="alert"]::before,
+[role="status"]::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle, rgba(var(--saffron-rgb), 0.15) 0%, transparent 70%);
+  filter: blur(15px);
+  opacity: 1;
+  z-index: -1;
+  animation: notificationPulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes notificationPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+/* Table and grid item glow */
+table tr:hover,
+.grid-item:hover,
+.table-row:hover {
+  background-color: rgba(var(--saffron-rgb), 0.05);
+  box-shadow: 0 0 20px rgba(var(--saffron-rgb), 0.1);
+  transition: all 200ms ease;
+}
+
+/* Floating action button enhanced glow */
+.fab,
+.floating-btn,
+[class*="float"] {
+  position: relative;
+}
+
+.fab::before,
+.floating-btn::before,
+[class*="float"]::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(var(--saffron-rgb), 0.25) 0%, transparent 60%),
+    radial-gradient(circle, rgba(var(--india-green-rgb), 0.2) 20%, transparent 80%);
+  filter: blur(20px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 300ms ease, transform 300ms ease;
+  pointer-events: none;
+}
+
+.fab:hover::before,
+.floating-btn:hover::before,
+[class*="float"]:hover::before {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Dark mode adjustments for outside glows */
+.dark button::before,
+.dark input[type="submit"]::before,
+.dark input[type="button"]::before,
+.dark .btn::before,
+.dark .button::before {
+  background: linear-gradient(135deg,
+      rgba(var(--saffron-rgb), 0.15) 0%,
+      rgba(var(--india-white-rgb), 0.08) 50%,
+      rgba(var(--india-green-rgb), 0.15) 100%);
+}
+
+.dark nav a::before,
+.dark nav button::before,
+.dark .nav-link::before {
+  background: linear-gradient(45deg,
+      rgba(var(--saffron-rgb), 0.12),
+      rgba(var(--india-green-rgb), 0.12));
+}
+
+/* Light mode adjustments for outside glows */
+.light button::before,
+.light input[type="submit"]::before,
+.light input[type="button"]::before,
+.light .btn::before,
+.light .button::before {
+  background: linear-gradient(135deg,
+      rgba(var(--saffron-rgb), 0.25) 0%,
+      rgba(var(--india-white-rgb), 0.15) 50%,
+      rgba(var(--india-green-rgb), 0.25) 100%);
+}
+
+/* Opt-out class for elements that shouldn't glow */
+.no-glow,
+.no-glow * {
+  filter: none !important;
+}
+
+.no-glow::before,
+.no-glow::after {
+  opacity: 0 !important;
+  display: none !important;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+
+  button::before,
+  input[type="submit"]::before,
+  input[type="button"]::before,
+  .btn::before,
+  .button::before,
+  nav a::before,
+  nav button::before,
+  .nav-link::before,
+  input::before,
+  textarea::before,
+  select::before,
+  a::before,
+  .dropdown::before,
+  .toggle::before,
+  [role="tab"]::before,
+  .badge::before,
+  .tooltip::before,
+  .search-container::before,
+  .notification::before,
+  .fab::before {
+    transition: none !important;
+    animation: none !important;
+    opacity: 0 !important;
+  }
+
+  img:hover,
+  .image-container:hover,
+  .avatar:hover,
+  .logo:hover,
+  .icon:hover,
+  svg:hover {
+    filter: none !important;
+  }
+}
+
+/* ==================================================================
+   DASHBOARD SECTION ORANGE GLOW EFFECTS
+   ================================================================== */
+
+/* Dashboard container and card elements */
+.dashboard,
+.dashboard-card,
+.dashboard-widget,
+.dashboard-panel,
+.operator-dashboard,
+.admin-panel,
+.dashboard-section,
+[class*="dashboard"],
+[class*="operator"] {
+  position: relative;
+  transition: transform 300ms cubic-bezier(.2, .8, .2, 1), filter 300ms ease;
+}
+
+/* Multi-layered orange glow for dashboard elements */
+.dashboard::before,
+.dashboard-card::before,
+.dashboard-widget::before,
+.dashboard-panel::before,
+.operator-dashboard::before,
+.admin-panel::before,
+.dashboard-section::before,
+[class*="dashboard"]::before,
+[class*="operator"]::before {
+  content: '';
+  position: absolute;
+  inset: -22%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -2;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(255, 153, 51, 0.28), transparent 48%),
+    radial-gradient(circle at 80% 75%, rgba(249, 115, 22, 0.22), transparent 42%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.15), transparent 58%);
+  filter: blur(22px);
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity 380ms cubic-bezier(.2, .8, .2, 1), transform 380ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.dashboard::after,
+.dashboard-card::after,
+.dashboard-widget::after,
+.dashboard-panel::after,
+.operator-dashboard::after,
+.admin-panel::after,
+.dashboard-section::after,
+[class*="dashboard"]::after,
+[class*="operator"]::after {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    conic-gradient(from 90deg,
+      rgba(255, 153, 51, 0.38) 0deg,
+      rgba(249, 115, 22, 0.32) 72deg,
+      rgba(255, 153, 51, 0.38) 144deg,
+      rgba(249, 115, 22, 0.32) 216deg,
+      rgba(255, 153, 51, 0.38) 288deg,
+      rgba(249, 115, 22, 0.32) 360deg);
+  filter: blur(18px);
+  opacity: 0;
+  animation: dashboardOrangeRotate 5s linear infinite;
+  transition: opacity 320ms cubic-bezier(.2, .8, .2, 1);
+}
+
+.dashboard:hover::before,
+.dashboard-card:hover::before,
+.dashboard-widget:hover::before,
+.dashboard-panel:hover::before,
+.operator-dashboard:hover::before,
+.admin-panel:hover::before,
+.dashboard-section:hover::before,
+[class*="dashboard"]:hover::before,
+[class*="operator"]:hover::before {
+  opacity: 1;
+  transform: scale(1.12);
+}
+
+.dashboard:hover::after,
+.dashboard-card:hover::after,
+.dashboard-widget:hover::after,
+.dashboard-panel:hover::after,
+.operator-dashboard:hover::after,
+.admin-panel:hover::after,
+.dashboard-section:hover::after,
+[class*="dashboard"]:hover::after,
+[class*="operator"]:hover::after {
+  opacity: 1;
+}
+
+.dashboard:hover,
+.dashboard-card:hover,
+.dashboard-widget:hover,
+.dashboard-panel:hover,
+.operator-dashboard:hover,
+.admin-panel:hover,
+.dashboard-section:hover,
+[class*="dashboard"]:hover,
+[class*="operator"]:hover {
+  transform: translateY(-7px) scale(1.025) rotateX(1deg);
+  filter: drop-shadow(0 18px 40px rgba(255, 153, 51, 0.38)) drop-shadow(0 28px 70px rgba(249, 115, 22, 0.25));
+  box-shadow:
+    0 0 30px rgba(255, 153, 51, 0.45),
+    0 12px 50px rgba(249, 115, 22, 0.3);
+}
+
+/* Dashboard rotation animation */
+@keyframes dashboardOrangeRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Enhanced pulsing for active dashboard states */
+.dashboard.active,
+.dashboard-card.active,
+.dashboard-widget.active,
+[class*="dashboard"].active,
+[class*="operator"].active {
+  animation: dashboardOrangePulse 2.5s ease-in-out infinite;
+}
+
+@keyframes dashboardOrangePulse {
+
+  0%,
+  100% {
+    box-shadow:
+      0 0 25px rgba(255, 153, 51, 0.3),
+      0 8px 40px rgba(249, 115, 22, 0.2);
+  }
+
+  50% {
+    box-shadow:
+      0 0 40px rgba(255, 153, 51, 0.6),
+      0 15px 70px rgba(249, 115, 22, 0.4);
+  }
+}
+
+/* Dashboard dark mode adjustments */
+.dark .dashboard::before,
+.dark .dashboard-card::before,
+.dark .dashboard-widget::before,
+.dark [class*="dashboard"]::before,
+.dark [class*="operator"]::before {
+  background:
+    radial-gradient(circle at 20% 25%, rgba(255, 153, 51, 0.32), transparent 48%),
+    radial-gradient(circle at 80% 75%, rgba(249, 115, 22, 0.28), transparent 42%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.22), transparent 58%);
+}
+
+.dark .dashboard::after,
+.dark .dashboard-card::after,
+.dark .dashboard-widget::after,
+.dark [class*="dashboard"]::after,
+.dark [class*="operator"]::after {
+  background:
+    conic-gradient(from 90deg,
+      rgba(255, 153, 51, 0.38) 0deg,
+      rgba(249, 115, 22, 0.32) 72deg,
+      rgba(255, 153, 51, 0.38) 144deg,
+      rgba(249, 115, 22, 0.32) 216deg,
+      rgba(255, 153, 51, 0.38) 288deg,
+      rgba(249, 115, 22, 0.32) 360deg);
+}
+
+.dark .dashboard:hover,
+.dark .dashboard-card:hover,
+.dark .dashboard-widget:hover,
+.dark [class*="dashboard"]:hover,
+.dark [class*="operator"]:hover {
+  filter: drop-shadow(0 18px 40px rgba(255, 153, 51, 0.38)) drop-shadow(0 28px 70px rgba(249, 115, 22, 0.28));
+  box-shadow:
+    0 0 35px rgba(255, 153, 51, 0.5),
+    0 12px 50px rgba(249, 115, 22, 0.35),
+    inset 0 1px 0 rgba(255, 153, 51, 0.2);
+}
+
+/* Dashboard light mode enhanced effects */
+.light .dashboard::before,
+.light .dashboard-card::before,
+.light .dashboard-widget::before,
+.light [class*="dashboard"]::before,
+.light [class*="operator"]::before {
+  background:
+    radial-gradient(circle at 20% 25%, rgba(255, 153, 51, 0.45), transparent 48%),
+    radial-gradient(circle at 80% 75%, rgba(249, 115, 22, 0.38), transparent 42%),
+    radial-gradient(circle at 50% 50%, rgba(255, 153, 51, 0.28), transparent 58%);
+}
+
+.light .dashboard::after,
+.light .dashboard-card::after,
+.light .dashboard-widget::after,
+.light [class*="dashboard"]::after,
+.light [class*="operator"]::after {
+  background:
+    conic-gradient(from 90deg,
+      rgba(255, 153, 51, 0.48) 0deg,
+      rgba(249, 115, 22, 0.42) 72deg,
+      rgba(255, 153, 51, 0.48) 144deg,
+      rgba(249, 115, 22, 0.42) 216deg,
+      rgba(255, 153, 51, 0.48) 288deg,
+      rgba(249, 115, 22, 0.42) 360deg);
+}
+
+.light .dashboard:hover,
+.light .dashboard-card:hover,
+.light .dashboard-widget:hover,
+.light [class*="dashboard"]:hover,
+.light [class*="operator"]:hover {
+  filter: drop-shadow(0 18px 40px rgba(255, 153, 51, 0.55)) drop-shadow(0 28px 70px rgba(249, 115, 22, 0.42));
+  box-shadow:
+    0 0 40px rgba(255, 153, 51, 0.6),
+    0 15px 60px rgba(249, 115, 22, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Dashboard stats and metrics special glow */
+.dashboard-stats,
+.dashboard-metric,
+.dashboard-chart,
+.stats-card,
+.metric-card,
+[class*="stats"],
+[class*="metric"] {
+  position: relative;
+}
+
+.dashboard-stats::before,
+.dashboard-metric::before,
+.dashboard-chart::before,
+.stats-card::before,
+.metric-card::before,
+[class*="stats"]::before,
+[class*="metric"]::before {
+  content: '';
+  position: absolute;
+  inset: -15%;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255, 153, 51, 0.2), transparent 40%),
+    radial-gradient(circle at 65% 65%, rgba(249, 115, 22, 0.15), transparent 35%);
+  filter: blur(15px);
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 250ms ease, transform 250ms ease;
+}
+
+.dashboard-stats:hover::before,
+.dashboard-metric:hover::before,
+.dashboard-chart:hover::before,
+.stats-card:hover::before,
+.metric-card:hover::before,
+[class*="stats"]:hover::before,
+[class*="metric"]:hover::before {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.dashboard-stats:hover,
+.dashboard-metric:hover,
+.dashboard-chart:hover,
+.stats-card:hover,
+.metric-card:hover,
+[class*="stats"]:hover,
+[class*="metric"]:hover {
+  transform: translateY(-3px) scale(1.01);
+  filter: drop-shadow(0 10px 25px rgba(255, 153, 51, 0.3));
+  box-shadow: 0 0 20px rgba(255, 153, 51, 0.25);
+}
+
+/* Dashboard navigation and menu glows */
+.dashboard-nav,
+.dashboard-menu,
+.dashboard-sidebar,
+.nav-item,
+.menu-item,
+[class*="dashboard-nav"],
+[class*="dashboard-menu"] {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dashboard-nav:hover,
+.dashboard-menu:hover,
+.dashboard-sidebar:hover,
+.nav-item:hover,
+.menu-item:hover,
+[class*="dashboard-nav"]:hover,
+[class*="dashboard-menu"]:hover {
+  transform: translateX(8px);
+  box-shadow:
+    0 0 15px rgba(255, 153, 51, 0.4),
+    0 5px 20px rgba(249, 115, 22, 0.25);
+}
+
+/* Dashboard table and data grid glows */
+.dashboard table,
+.dashboard-table,
+.data-grid,
+.schedule-table,
+.route-table,
+[class*="dashboard"] table,
+[class*="operator"] table {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.dashboard table:hover,
+.dashboard-table:hover,
+.data-grid:hover,
+.schedule-table:hover,
+.route-table:hover,
+[class*="dashboard"] table:hover,
+[class*="operator"] table:hover {
+  box-shadow:
+    0 0 25px rgba(255, 153, 51, 0.35),
+    0 8px 35px rgba(249, 115, 22, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Dashboard row hover effects */
+.dashboard table tr:hover,
+.dashboard-table tr:hover,
+.data-grid tr:hover,
+.schedule-table tr:hover,
+.route-table tr:hover,
+[class*="dashboard"] tr:hover,
+[class*="operator"] tr:hover {
+  background: rgba(255, 153, 51, 0.1) !important;
+  box-shadow:
+    0 0 15px rgba(255, 153, 51, 0.25),
+    inset 0 0 20px rgba(249, 115, 22, 0.1);
+  transform: scale(1.01);
+  transition: all 0.2s ease;
+}
+
+/* Dashboard button and action glows */
+.dashboard button,
+.dashboard-btn,
+.action-btn,
+.operator-btn,
+.dashboard .btn,
+[class*="dashboard"] button,
+[class*="operator"] button {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dashboard button:hover,
+.dashboard-btn:hover,
+.action-btn:hover,
+.operator-btn:hover,
+.dashboard .btn:hover,
+[class*="dashboard"] button:hover,
+[class*="operator"] button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow:
+    0 0 20px rgba(255, 153, 51, 0.5),
+    0 10px 30px rgba(249, 115, 22, 0.35),
+    0 15px 40px rgba(0, 0, 0, 0.1);
+  filter: brightness(1.1) saturate(1.2);
+}
+
+/* Dashboard icon glows */
+.dashboard .icon,
+.dashboard-icon,
+.operator-icon,
+.stats-icon,
+.metric-icon,
+[class*="dashboard"] .icon,
+[class*="operator"] .icon,
+[class*="dashboard"] svg,
+[class*="operator"] svg {
+  transition: all 0.3s ease;
+}
+
+.dashboard .icon:hover,
+.dashboard-icon:hover,
+.operator-icon:hover,
+.stats-icon:hover,
+.metric-icon:hover,
+[class*="dashboard"] .icon:hover,
+[class*="operator"] .icon:hover,
+[class*="dashboard"] svg:hover,
+[class*="operator"] svg:hover {
+  filter: drop-shadow(0 0 10px rgba(255, 153, 51, 0.6)) drop-shadow(0 0 20px rgba(249, 115, 22, 0.4));
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Light mode specific dashboard enhancements */
+.light .dashboard table:hover,
+.light .dashboard-table:hover,
+.light [class*="dashboard"] table:hover {
+  background: rgba(255, 153, 51, 0.05);
+  border: 1px solid rgba(255, 153, 51, 0.3);
+}
+
+.light .dashboard button:hover,
+.light .dashboard-btn:hover,
+.light [class*="dashboard"] button:hover {
+  background: linear-gradient(135deg,
+      rgba(255, 153, 51, 0.9),
+      rgba(249, 115, 22, 0.8));
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Dark mode specific dashboard enhancements */
+.dark .dashboard table:hover,
+.dark .dashboard-table:hover,
+.dark [class*="dashboard"] table:hover {
+  background: rgba(255, 153, 51, 0.08);
+  border: 1px solid rgba(255, 153, 51, 0.4);
+}
+
+.dark .dashboard button:hover,
+.dark .dashboard-btn:hover,
+.dark [class*="dashboard"] button:hover {
+  background: linear-gradient(135deg,
+      rgba(255, 153, 51, 0.7),
+      rgba(249, 115, 22, 0.6));
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Dashboard GlassCard specific glows */
+.dashboard .glass-card,
+.dashboard .GlassCard,
+[class*="dashboard"] .glass-card,
+[class*="operator"] .glass-card {
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dashboard .glass-card::before,
+.dashboard .GlassCard::before,
+[class*="dashboard"] .glass-card::before,
+[class*="operator"] .glass-card::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 153, 51, 0.3), transparent 45%),
+    radial-gradient(circle at 70% 70%, rgba(249, 115, 22, 0.25), transparent 40%);
+  filter: blur(20px);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.dashboard .glass-card:hover::before,
+.dashboard .GlassCard:hover::before,
+[class*="dashboard"] .glass-card:hover::before,
+[class*="operator"] .glass-card:hover::before {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.dashboard .glass-card:hover,
+.dashboard .GlassCard:hover,
+[class*="dashboard"] .glass-card:hover,
+[class*="operator"] .glass-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow:
+    0 0 40px rgba(255, 153, 51, 0.4),
+    0 20px 60px rgba(249, 115, 22, 0.3),
+    0 30px 80px rgba(0, 0, 0, 0.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  backdrop-filter: blur(20px) saturate(1.5);
+}
+
+/* Dashboard stats value glow effects */
+.dashboard .text-3xl,
+.dashboard .text-4xl,
+.dashboard .text-5xl,
+.dashboard .font-bold,
+[class*="dashboard"] .text-3xl,
+[class*="dashboard"] .text-4xl,
+[class*="dashboard"] .text-5xl,
+[class*="operator"] .font-bold {
+  transition: all 0.3s ease;
+}
+
+.dashboard .text-3xl:hover,
+.dashboard .text-4xl:hover,
+.dashboard .text-5xl:hover,
+.dashboard .font-bold:hover,
+[class*="dashboard"] .text-3xl:hover,
+[class*="dashboard"] .text-4xl:hover,
+[class*="dashboard"] .text-5xl:hover,
+[class*="operator"] .font-bold:hover {
+  text-shadow:
+    0 0 10px rgba(255, 153, 51, 0.6),
+    0 0 20px rgba(249, 115, 22, 0.4),
+    0 0 30px rgba(255, 153, 51, 0.2);
+  transform: scale(1.05);
+}
+
+/* Dashboard route and schedule item glows */
+.dashboard .p-4,
+.dashboard .rounded-xl,
+.dashboard .border,
+[class*="dashboard"] .p-4,
+[class*="operator"] .p-4 {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dashboard .p-4:hover,
+.dashboard .rounded-xl:hover,
+.dashboard .border:hover,
+[class*="dashboard"] .p-4:hover,
+[class*="operator"] .p-4:hover {
+  background: rgba(255, 153, 51, 0.1) !important;
+  border-color: rgba(255, 153, 51, 0.5) !important;
+  transform: translateX(10px) scale(1.02);
+  box-shadow:
+    0 0 25px rgba(255, 153, 51, 0.3),
+    0 8px 30px rgba(249, 115, 22, 0.2),
+    inset 0 1px 0 rgba(255, 153, 51, 0.2);
+}
+
+/* Dashboard header title glow */
+.dashboard h1,
+.dashboard h2,
+.dashboard h3,
+[class*="dashboard"] h1,
+[class*="dashboard"] h2,
+[class*="dashboard"] h3 {
+  transition: all 0.3s ease;
+}
+
+.dashboard h1:hover,
+.dashboard h2:hover,
+.dashboard h3:hover,
+[class*="dashboard"] h1:hover,
+[class*="dashboard"] h2:hover,
+[class*="dashboard"] h3:hover {
+  text-shadow:
+    0 0 15px rgba(255, 153, 51, 0.7),
+    0 0 30px rgba(249, 115, 22, 0.5),
+    0 0 45px rgba(255, 153, 51, 0.3);
+  transform: scale(1.02);
+}
+
+/* ==================================================================
+   QUICK LINKS AND SUPPORT SECTION ORANGE HOVER EFFECTS
+   ================================================================== */
+
+/* Quick Links section hover effects for light mode */
+.light .quick-links a:hover,
+.light .quick-links-section a:hover,
+.light .quick-links li a:hover,
+.light [class*="quick-links"] a:hover,
+.light [class*="quick"] a:hover {
+  color: #ff7a00 !important;
+  text-shadow: 0 0 8px rgba(255, 122, 0, 0.4);
+  transition: color 250ms ease, text-shadow 250ms ease;
+}
+
+/* Support section hover effects for light mode */
+.light .support a:hover,
+.light .support-section a:hover,
+.light .support li a:hover,
+.light [class*="support"] a:hover,
+.light .help a:hover,
+.light .help-section a:hover,
+.light [class*="help"] a:hover {
+  color: #ff7a00 !important;
+  text-shadow: 0 0 8px rgba(255, 122, 0, 0.4);
+  transition: color 250ms ease, text-shadow 250ms ease;
+}
+
+/* Footer links orange hover effects for light mode */
+.light footer a:hover,
+.light .footer a:hover,
+.light .footer-section a:hover,
+.light .footer-links a:hover,
+.light .footer-nav a:hover {
+  color: #ff7a00 !important;
+  text-shadow: 0 0 8px rgba(255, 122, 0, 0.4);
+  transition: color 250ms ease, text-shadow 250ms ease;
+}
+
+/* Generic section link hover effects for light mode */
+.light .section-links a:hover,
+.light .nav-section a:hover,
+.light .link-section a:hover,
+.light .links a:hover {
+  color: #ff7a00 !important;
+  text-shadow: 0 0 8px rgba(255, 122, 0, 0.4);
+  transition: color 250ms ease, text-shadow 250ms ease;
+}
+
+/* Enhanced hover effect with subtle glow for Quick Links heading */
+.light .quick-links h3:hover,
+.light .quick-links-section h3:hover,
+.light .quick-links h4:hover,
+.light .quick-links-section h4:hover,
+.light [class*="quick-links"] h3:hover,
+.light [class*="quick-links"] h4:hover {
+  color: #ff7a00 !important;
+  text-shadow: 0 0 12px rgba(255, 122, 0, 0.5);
+  transition: color 250ms ease, text-shadow 250ms ease;
+}
+
+/* Enhanced hover effect with subtle glow for Support heading */
+.light .support h3:hover,
+.light .support-section h3:hover,
+.light .support h4:hover,
+.light .support-section h4:hover,
+.light [class*="support"] h3:hover,
+.light [class*="support"] h4:hover,
+.light .help h3:hover,
+.light .help-section h3:hover,
+.light [class*="help"] h3:hover {
+  color: #ff7a00 !important;
+  text-shadow: 0 0 12px rgba(255, 122, 0, 0.5);
+  transition: color 250ms ease, text-shadow 250ms ease;
+}
+
+/* List item hover effects for better UX */
+.light .quick-links li:hover,
+.light .quick-links-section li:hover,
+.light .support li:hover,
+.light .support-section li:hover,
+.light [class*="quick-links"] li:hover,
+.light [class*="support"] li:hover {
+  background-color: rgba(255, 122, 0, 0.05);
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  transition: background-color 250ms ease;
+}
+
+/* Specific targeting for common footer structures */
+.light .footer-column a:hover,
+.light .footer-item a:hover,
+.light .footer-menu a:hover,
+.light .footer-list a:hover,
+.light .footer ul a:hover,
+.light .footer ol a:hover {
+  color: #ff7a00 !important;
+  text-shadow: 0 0 8px rgba(255, 122, 0, 0.4);
+  transition: color 250ms ease, text-shadow 250ms ease;
+}
+
+/* Additional coverage for various naming conventions */
+.light .quicklinks a:hover,
+.light .quick_links a:hover,
+.light .supportlinks a:hover,
+.light .support_links a:hover,
+.light .helplinks a:hover,
+.light .help_links a:hover {
+  color: #ff7a00 !important;
+  text-shadow: 0 0 8px rgba(255, 122, 0, 0.4);
+  transition: color 250ms ease, text-shadow 250ms ease;
+}
+
+/* ==================================================================
+   SUPPORT PAGES LOW GLOWING EFFECTS
+   ================================================================== */
+
+/* Help Center, FAQs, Privacy Policy, Terms of Service Pages - Simple Orange Hover Effects */
+.help-center,
+.faqs,
+.privacy-policy,
+.terms-of-service,
+[class*="help-center"],
+[class*="faqs"],
+[class*="privacy"],
+[class*="terms"] {
+  position: relative;
+}
+
+/* Simple orange text hover effects for support pages */
+.help-center h1:hover,
+.help-center h2:hover,
+.help-center h3:hover,
+.help-center h4:hover,
+.help-center h5:hover,
+.help-center h6:hover,
+.help-center p:hover,
+.help-center a:hover,
+.help-center span:hover,
+.help-center div:hover,
+.help-center li:hover,
+.faqs h1:hover,
+.faqs h2:hover,
+.faqs h3:hover,
+.faqs h4:hover,
+.faqs h5:hover,
+.faqs h6:hover,
+.faqs p:hover,
+.faqs a:hover,
+.faqs span:hover,
+.faqs div:hover,
+.faqs li:hover,
+.privacy-policy h1:hover,
+.privacy-policy h2:hover,
+.privacy-policy h3:hover,
+.privacy-policy h4:hover,
+.privacy-policy h5:hover,
+.privacy-policy h6:hover,
+.privacy-policy p:hover,
+.privacy-policy a:hover,
+.privacy-policy span:hover,
+.privacy-policy div:hover,
+.privacy-policy li:hover,
+.terms-of-service h1:hover,
+.terms-of-service h2:hover,
+.terms-of-service h3:hover,
+.terms-of-service h4:hover,
+.terms-of-service h5:hover,
+.terms-of-service h6:hover,
+.terms-of-service p:hover,
+.terms-of-service a:hover,
+.terms-of-service span:hover,
+.terms-of-service div:hover,
+.terms-of-service li:hover,
+[class*="help-center"] h1:hover,
+[class*="help-center"] h2:hover,
+[class*="help-center"] h3:hover,
+[class*="help-center"] h4:hover,
+[class*="help-center"] h5:hover,
+[class*="help-center"] h6:hover,
+[class*="help-center"] p:hover,
+[class*="help-center"] a:hover,
+[class*="help-center"] span:hover,
+[class*="help-center"] div:hover,
+[class*="help-center"] li:hover,
+[class*="faqs"] h1:hover,
+[class*="faqs"] h2:hover,
+[class*="faqs"] h3:hover,
+[class*="faqs"] h4:hover,
+[class*="faqs"] h5:hover,
+[class*="faqs"] h6:hover,
+[class*="faqs"] p:hover,
+[class*="faqs"] a:hover,
+[class*="faqs"] span:hover,
+[class*="faqs"] div:hover,
+[class*="faqs"] li:hover,
+[class*="privacy"] h1:hover,
+[class*="privacy"] h2:hover,
+[class*="privacy"] h3:hover,
+[class*="privacy"] h4:hover,
+[class*="privacy"] h5:hover,
+[class*="privacy"] h6:hover,
+[class*="privacy"] p:hover,
+[class*="privacy"] a:hover,
+[class*="privacy"] span:hover,
+[class*="privacy"] div:hover,
+[class*="privacy"] li:hover,
+[class*="terms"] h1:hover,
+[class*="terms"] h2:hover,
+[class*="terms"] h3:hover,
+[class*="terms"] h4:hover,
+[class*="terms"] h5:hover,
+[class*="terms"] h6:hover,
+[class*="terms"] p:hover,
+[class*="terms"] a:hover,
+[class*="terms"] span:hover,
+[class*="terms"] div:hover,
+[class*="terms"] li:hover {
+  color: rgb(255, 153, 51) !important;
+  transition: color 0.3s ease;
+}
