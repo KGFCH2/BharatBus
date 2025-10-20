@@ -185,4 +185,3 @@ If you want me to continue, tell me which area to focus on next (dashboard glow,
 
 ---
 
-> This README intentionally omits a license section as requested.
