@@ -65,8 +65,9 @@ export default function Profile() {
             ticketIds.forEach((id) => {
                 const metaRaw = localStorage.getItem(`ticket_${id}_meta`);
                 const meta = metaRaw ? JSON.parse(metaRaw) : undefined;
-                // only include tickets that belong to the current user (or unassigned)
-                if (meta?.userId && user?.id && meta.userId !== user.id) return;
+                // only include tickets that belong to the current user
+                // Ignore anonymous tickets (meta.userId === null/undefined)
+                if (!meta?.userId || (user?.id && meta.userId !== user.id)) return;
                 const pdf = localStorage.getItem(`ticket_${id}`) || undefined;
                 const img = localStorage.getItem(`ticket_${id}_img`) || undefined;
 
@@ -160,22 +161,10 @@ export default function Profile() {
         };
     }, [user, loadSavedTickets]);
 
-    const downloadDataUri = async (dataUri: string, filename: string) => {
-        try {
-            const res = await fetch(dataUri);
-            const blob = await res.blob();
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-        } catch (err) {
-            console.error('Download failed', err);
-            alert('Failed to download file');
-        }
+    // Use shared download helper which handles data URIs and blob URLs correctly
+    const downloadData = async (dataUri: string, filename: string) => {
+        const mod = await import('../utils/download');
+        return mod.downloadDataUri(dataUri, filename);
     };
 
     const formatDate = (dateString?: string) => {
@@ -262,7 +251,7 @@ export default function Profile() {
                     <div className="flex flex-col gap-2">
                         {ticket.pdf && (
                             <button
-                                onClick={() => downloadDataUri(ticket.pdf!, `${ticket.id}.pdf`)}
+                                onClick={() => downloadData(ticket.pdf!, `${ticket.id}.pdf`)}
                                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 transition-all text-sm font-semibold group"
                                 title="Download PDF"
                             >
@@ -270,16 +259,37 @@ export default function Profile() {
                                 PDF
                             </button>
                         )}
-                        {ticket.img && (
-                            <button
-                                onClick={() => window.open(ticket.img, '_blank')}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-all text-sm font-semibold group"
-                                title="View Image"
-                            >
-                                <Eye className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                                View
-                            </button>
-                        )}
+                        {/* View: try PDF first, then image. If neither, show a small alert */}
+                        <button
+                            onClick={async () => {
+                                try {
+                                    if (ticket.pdf) {
+                                        const newWin = window.open();
+                                        if (newWin) {
+                                            newWin.document.open();
+                                            newWin.document.write(`<iframe src="${ticket.pdf}" style="border:none; width:100vw; height:100vh"></iframe>`);
+                                            newWin.document.close();
+                                            return;
+                                        }
+                                    }
+
+                                    if (ticket.img) {
+                                        window.open(ticket.img, '_blank');
+                                        return;
+                                    }
+
+                                    alert('No preview available for this ticket');
+                                } catch (err) {
+                                    console.error('Failed to open ticket preview', err);
+                                    alert('Unable to open ticket preview');
+                                }
+                            }}
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-all text-sm font-semibold group"
+                            title="View"
+                        >
+                            <Eye className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            View
+                        </button>
                     </div>
                 </div>
             </GlassCard>
@@ -309,9 +319,12 @@ export default function Profile() {
                     <GlassCard className="text-center mb-12">
                         <div className="flex items-center justify-center mb-4 relative">
                             <img src={gender === 'male' ? maleAvatar : gender === 'female' ? femaleAvatar : neutralAvatar} alt="avatar" className="w-20 h-20 rounded-full object-cover mr-4" />
-                            <span aria-hidden className="absolute right-1 bottom-6 w-7 h-7 rounded-full text-sm flex items-center justify-center bg-white/90 text-black shadow-sm">
-                                {gender === 'male' ? '🚹' : gender === 'female' ? '🚺' : '🧑'}
-                            </span>
+                            {/* Only show gender emoji for male/female; for 'other' show none */}
+                            {gender === 'male' || gender === 'female' ? (
+                                <span aria-hidden className="absolute right-1 bottom-6 w-7 h-7 rounded-full text-sm flex items-center justify-center bg-white/90 text-black shadow-sm">
+                                    {gender === 'male' ? '🚹' : '🚺'}
+                                </span>
+                            ) : null}
                         </div>
                         <div className="text-2xl font-bold text-white mb-2">{user?.name || 'No Name'}</div>
                         <div className="text-white/70 mb-4">{user?.email || 'No Email'}</div>

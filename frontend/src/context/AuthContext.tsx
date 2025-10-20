@@ -36,38 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [user]);
 
-  // Helper: associate any tickets that were created without a user to the provided userId
-  const associateAnonymousTickets = (userId: string) => {
-    try {
-      const indexKey = `tickets_user_${userId}`;
-      const rawIndex = localStorage.getItem(indexKey);
-      const indexArr: string[] = rawIndex ? JSON.parse(rawIndex) : [];
 
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i) || '';
-        if (k.startsWith('ticket_') && k.endsWith('_meta')) {
-          const id = k.replace('ticket_', '').replace('_meta', '');
-          try {
-            const metaRaw = localStorage.getItem(`ticket_${id}_meta`);
-            if (!metaRaw) continue;
-            const meta = JSON.parse(metaRaw);
-            if (!meta.userId) {
-              meta.userId = userId;
-              localStorage.setItem(`ticket_${id}_meta`, JSON.stringify(meta));
-              if (!indexArr.includes(id)) indexArr.push(id);
-            }
-          } catch (err) {
-            console.debug('Auth: failed to process ticket meta during association', err);
-          }
-        }
-      }
-
-      try { localStorage.setItem(indexKey, JSON.stringify(indexArr)); } catch (err) { console.debug('Auth: failed to persist tickets_user index', err); }
-      try { window.dispatchEvent(new CustomEvent('tickets-updated', { detail: { userId } })); } catch (err) { /* ignore */ }
-    } catch (err) {
-      console.debug('Auth: error in associateAnonymousTickets', err);
-    }
-  };
 
   const login = async (email: string, password: string) => {
     try {
@@ -83,8 +52,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try { localStorage.setItem('auth_user', JSON.stringify(userObj)); } catch (err) { console.debug('Auth: failed to persist auth_user', err); }
         if (data.token) localStorage.setItem('auth_token', data.token);
         console.debug('Auth: login succeeded, user set', userObj);
-        // attach any anonymous tickets to this user so Profile shows them
-        associateAnonymousTickets(userObj.id);
       } else {
         // fallback mock
         const userObj = { id: '1', name: 'Demo User', email, gender: null };
@@ -92,7 +59,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try { localStorage.setItem('auth_user', JSON.stringify(userObj)); } catch (err) { console.debug('Auth: failed to persist auth_user', err); }
         localStorage.setItem('auth_token', 'mock-token');
         console.debug('Auth: login fallback user set', userObj);
-        associateAnonymousTickets(userObj.id);
       }
     } catch {
       // fallback behavior
@@ -101,7 +67,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try { localStorage.setItem('auth_user', JSON.stringify(userObj)); } catch (err) { console.debug('Auth: failed to persist auth_user', err); }
       localStorage.setItem('auth_token', 'mock-token');
       console.debug('Auth: login catch fallback user set', userObj);
-      associateAnonymousTickets(userObj.id);
     }
   };
 
@@ -117,14 +82,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try { localStorage.setItem('auth_user', JSON.stringify(userObj)); } catch (err) { console.debug('Auth: failed to persist auth_user', err); }
         if (data.token) localStorage.setItem('auth_token', data.token);
         console.debug('Auth: signup succeeded, user set', userObj);
-        associateAnonymousTickets(userObj.id);
       } else {
         const userObj = { id: '1', name, email, gender: gender ?? null };
         setUser(userObj);
         try { localStorage.setItem('auth_user', JSON.stringify(userObj)); } catch (err) { console.debug('Auth: failed to persist auth_user', err); }
         localStorage.setItem('auth_token', 'mock-token');
         console.debug('Auth: signup fallback user set', userObj);
-        associateAnonymousTickets(userObj.id);
       }
     } catch {
       const userObj = { id: '1', name, email, gender: gender ?? null };
@@ -132,7 +95,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try { localStorage.setItem('auth_user', JSON.stringify(userObj)); } catch (err) { console.debug('Auth: failed to persist auth_user', err); }
       localStorage.setItem('auth_token', 'mock-token');
       console.debug('Auth: signup catch fallback user set', userObj);
-      associateAnonymousTickets(userObj.id);
     }
   };
 

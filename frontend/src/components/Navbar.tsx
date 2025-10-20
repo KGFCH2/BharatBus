@@ -119,9 +119,12 @@ export default function Navbar(): JSX.Element {
               <div className="flex items-center gap-3">
                 <button title={user?.name || 'Account'} aria-label="User account" className="p-1 rounded-full bg-white/5 text-white/90 glow-hover relative" onClick={() => { window.scrollTo(0, 0); navigate('/profile'); }}>
                   <img src={gender === 'male' ? maleAvatar : gender === 'female' ? femaleAvatar : neutralAvatar} alt="avatar" className="w-8 h-8 rounded-full object-cover" />
-                  <span aria-hidden className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full text-xs flex items-center justify-center bg-white/90 text-black shadow-sm">{gender === 'male' ? '🚹' : gender === 'female' ? '🚺' : '🧑'}</span>
+                  {/* Only show gender emoji for male/female. For 'other' we intentionally show no emoji. */}
+                  {gender === 'male' || gender === 'female' ? (
+                    <span aria-hidden className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full text-xs flex items-center justify-center bg-white/90 text-black shadow-sm">{gender === 'male' ? '🚹' : '🚺'}</span>
+                  ) : null}
                 </button>
-                <button title="Log out" aria-label="Log out" className="p-2 rounded-full bg-white text-gray-900 transition-all glow-hover" onClick={() => { logout(); window.scrollTo(0, 0); navigate('/login'); }}>
+                <button title="Log out" aria-label="Log out" className="p-2 rounded-full bg-white text-gray-900 transition-all glow-hover neon-logout" onClick={() => { logout(); window.scrollTo(0, 0); navigate('/login'); }}>
                   <LogOut className="w-5 h-5" />
                 </button>
               </div>

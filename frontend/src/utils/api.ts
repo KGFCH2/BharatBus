@@ -132,11 +132,13 @@ export const authApi = useMock
     // accept password param to match real API signature; password is ignored by mock
     login: (email: string, password?: string) => {
       void password;
-      return mockResponse({ user: { id: '1', name: 'Demo User', email }, token: 'mock-token' });
+      // Return no user for mock login
+      return mockResponse({ user: null, token: null });
     },
     signup: (name: string, email: string, password?: string) => {
       void password;
-      return mockResponse({ user: { id: '1', name, email }, token: 'mock-token' });
+      // Return no user for mock signup
+      return mockResponse({ user: null, token: null });
     },
     logout: () => mockResponse({ ok: true }),
   }

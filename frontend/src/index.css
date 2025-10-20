@@ -403,6 +403,26 @@ textarea:focus-visible {
   box-shadow: 0 10px 36px rgba(var(--cinematic-c1-rgb), 0.085), 0 0 96px rgba(var(--cinematic-c2-rgb), 0.05);
 }
 
+/* Neon logout icon edge (reusable) */
+.neon-logout {
+  position: relative;
+}
+
+.neon-logout::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  pointer-events: none;
+  box-shadow: 0 6px 24px rgba(var(--cinematic-c1-rgb), 0.18), 0 0 40px rgba(var(--cinematic-c2-rgb), 0.12);
+  transition: box-shadow 220ms ease, transform 220ms ease;
+}
+
+.neon-logout:hover::after {
+  box-shadow: 0 10px 36px rgba(var(--cinematic-c1-rgb), 0.26), 0 0 80px rgba(var(--cinematic-c2-rgb), 0.18);
+  transform: translateY(-2px);
+}
+
 @keyframes glowPulse {
   0% {
     transform: scale(0.98);

@@ -66,6 +66,53 @@ export default function Routes() {
 
   const groupedRoutes = [
     {
+      category: 'Featured Routes',
+      routes: [
+        {
+          id: 1,
+          busNumber: '81',
+          operator: 'BharatBus',
+          from: 'Barasat',
+          to: 'Barrackpore',
+          departure: '05:00 AM',
+          arrival: '11:00 PM',
+          duration: '—',
+          fare: 25,
+          stops: ['Barasat', 'Madhyamgram', 'Sodepur', 'Barrackpore'],
+          frequency: 'Every 15 mins',
+          rating: 4.5,
+        },
+        {
+          id: 2,
+          busNumber: 'Express 42',
+          operator: 'Express Services',
+          from: 'Howrah',
+          to: 'Salt Lake',
+          departure: '06:00 AM',
+          arrival: '10:00 PM',
+          duration: '—',
+          fare: 30,
+          stops: ['Howrah', 'Maidan', 'Park Street', 'Salt Lake'],
+          frequency: 'Every 20 mins',
+          rating: 4.4,
+        },
+        {
+          id: 3,
+          busNumber: 'Metro Link',
+          operator: 'MetroLink',
+          from: 'Airport',
+          to: 'Esplanade',
+          departure: '05:30 AM',
+          arrival: '11:30 PM',
+          duration: '—',
+          fare: 40,
+          stops: ['Airport', 'New Town', 'Sector V', 'Esplanade'],
+          frequency: 'Every 10 mins',
+          rating: 4.6,
+        },
+      ],
+    },
+    {
       category: 'Public / STU (NBSTC examples)',
       routes: [
         {

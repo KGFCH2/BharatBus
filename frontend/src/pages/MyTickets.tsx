@@ -42,7 +42,8 @@ export default function MyTickets() {
         const meta = metaRaw ? JSON.parse(metaRaw) : undefined;
 
         // Only include tickets that belong to the current user
-        if (meta?.userId && meta.userId !== user.id) continue;
+        // Ignore anonymous tickets (meta.userId === null/undefined)
+        if (!meta?.userId || meta.userId !== user.id) continue;
 
         const pdf = localStorage.getItem(key) || undefined;
         const img = localStorage.getItem(`${key}_img`) || undefined;
@@ -80,22 +81,11 @@ export default function MyTickets() {
     setPastTickets(saved.filter(t => !t.isUpcoming));
   }, [user, isAuthenticated]);
 
-  const downloadDataUri = async (dataUri: string, filename: string) => {
-    try {
-      const res = await fetch(dataUri);
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Download failed', err);
-      alert('Failed to download file');
-    }
+  // Use shared download helper which handles data URIs and blob URLs correctly
+  import('../utils/download').then((m) => m).catch(() => null);
+  const downloadData = async (dataUri: string, filename: string) => {
+    const mod = await import('../utils/download');
+    return mod.downloadDataUri(dataUri, filename);
   };
 
   const formatDate = (dateString?: string) => {
@@ -121,8 +111,8 @@ export default function MyTickets() {
             <div>
               <h3 className="font-bold text-white text-lg mb-1">{ticket.id}</h3>
               <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold w-fit ${ticket.isUpcoming
-                  ? 'bg-green-500/20 text-green-400'
-                  : 'bg-gray-500/20 text-gray-400'
+                ? 'bg-green-500/20 text-green-400'
+                : 'bg-gray-500/20 text-gray-400'
                 }`}>
                 {ticket.isUpcoming ? (
                   <>
@@ -196,22 +186,45 @@ export default function MyTickets() {
           <div className="flex gap-2 pt-3 border-t border-white/10">
             {ticket.pdf && (
               <button
-                onClick={() => downloadDataUri(ticket.pdf!, `${ticket.id}.pdf`)}
+                onClick={() => downloadData(ticket.pdf!, `${ticket.id}.pdf`)}
                 className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-orange-500/20 text-orange-400 hover:bg-orange-500/30 transition-all text-sm font-semibold"
               >
                 <Download className="w-4 h-4" />
                 PDF
               </button>
             )}
-            {ticket.img && (
-              <button
-                onClick={() => window.open(ticket.img, '_blank')}
-                className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-all text-sm font-semibold"
-              >
-                <Eye className="w-4 h-4" />
-                View
-              </button>
-            )}
+            {/* View: try PDF first, then image. If neither, show a small alert */}
+            <button
+              onClick={async () => {
+                try {
+                  if (ticket.pdf) {
+                    // Open PDF data URI in new tab
+                    const newWin = window.open();
+                    if (newWin) {
+                      newWin.document.open();
+                      // Use an embed to ensure proper rendering across browsers
+                      newWin.document.write(`<iframe src="${ticket.pdf}" style="border:none; width:100vw; height:100vh"></iframe>`);
+                      newWin.document.close();
+                      return;
+                    }
+                  }
+
+                  if (ticket.img) {
+                    window.open(ticket.img, '_blank');
+                    return;
+                  }
+
+                  alert('No preview available for this ticket');
+                } catch (err) {
+                  console.error('Failed to open ticket preview', err);
+                  alert('Unable to open ticket preview');
+                }
+              }}
+              className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-all text-sm font-semibold"
+            >
+              <Eye className="w-4 h-4" />
+              View
+            </button>
           </div>
         </div>
       </GlassCard>
@@ -268,8 +281,8 @@ export default function MyTickets() {
           <button
             onClick={() => setActiveTab('upcoming')}
             className={`px-6 py-3 rounded-xl font-semibold transition-all ${activeTab === 'upcoming'
-                ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
-                : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
+              ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
+              : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
               }`}
           >
             Upcoming Tickets ({upcomingTickets.length})
@@ -277,8 +290,8 @@ export default function MyTickets() {
           <button
             onClick={() => setActiveTab('past')}
             className={`px-6 py-3 rounded-xl font-semibold transition-all ${activeTab === 'past'
-                ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
-                : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
+              ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
+              : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
               }`}
           >
             Past Tickets ({pastTickets.length})

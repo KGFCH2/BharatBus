@@ -61,11 +61,13 @@ export default function LoginSignup() {
         navigate('/tickets');
       } else {
         await signup(formData.name, formData.email, formData.password, formData.gender as 'male' | 'female' | 'other');
-        // After signup, clear all ticket keys from localStorage
+        // After signup, clear all ticket keys and any per-user ticket index keys from localStorage
+        // This prevents leftover `tickets_user_*` indexes (which may have been created during
+        // associateAnonymousTickets) from causing phantom/placeholder tickets to appear.
         const keysToRemove: string[] = [];
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i)!;
-          if (key.startsWith('ticket_')) keysToRemove.push(key);
+          if (key.startsWith('ticket_') || key.startsWith('tickets_user_')) keysToRemove.push(key);
         }
         keysToRemove.forEach((k) => localStorage.removeItem(k));
         setSavedTickets([]);
@@ -249,16 +251,11 @@ export default function LoginSignup() {
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => {
+                        onClick={async () => {
                           const dataUri = localStorage.getItem(`ticket_${t.id}`);
                           if (!dataUri) return alert('Ticket not found');
-                          // create link and download
-                          const a = document.createElement('a');
-                          a.href = dataUri;
-                          a.download = `${t.id}.pdf`;
-                          document.body.appendChild(a);
-                          a.click();
-                          a.remove();
+                          const mod = await import('../utils/download');
+                          mod.downloadDataUri(dataUri, `${t.id}.pdf`);
                         }}
                         className="px-3 py-1 rounded brand-bg text-gray-900 font-semibold"
                       >
