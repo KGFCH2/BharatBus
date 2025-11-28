@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
-import { MapPin, Clock, IndianRupee, Search } from 'lucide-react';
+import { MapPin, Clock, IndianRupee, Search, Filter, X } from 'lucide-react';
 import GlassCard from '../components/GlassCard';
 import FlipCard from '../components/FlipCard';
 import GradientButton from '../components/GradientButton';
@@ -28,6 +28,9 @@ export default function Routes() {
   const from = searchParams.get('from') || 'Any Location';
   const to = searchParams.get('to') || 'Any Destination';
   const [query, setQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
+  const [selectedOperators, setSelectedOperators] = useState<string[]>([]);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
@@ -286,9 +289,9 @@ export default function Routes() {
         </motion.div>
 
         {/* Search / Filter bar */}
-        <div className="max-w-2xl mx-auto mb-8">
+        <div className="max-w-4xl mx-auto mb-8 space-y-4">
           <div className="flex items-center gap-2">
-            <div className="search-outline flex items-center w-full rounded-lg bg-white/5 px-3 py-2 transition-all light:bg-white light:border light:border-gray-200 light:text-black light:shadow-sm">
+            <div className="search-outline flex items-center flex-1 rounded-lg bg-white/5 px-3 py-2 transition-all light:bg-white light:border light:border-gray-200 light:text-black light:shadow-sm">
               <Search className="w-5 h-5 text-white/60 dark:text-white/70 light:text-slate-600 mr-3" />
               <input
                 aria-label="Search routes"
@@ -298,34 +301,142 @@ export default function Routes() {
                 onChange={(e) => setQuery(e.target.value)}
               />
             </div>
-            {query && (
+            <button
+              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition-all ${showFilters ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'bg-white/10 text-white light:bg-white/10 light:text-black'}`}
+              onClick={() => setShowFilters(!showFilters)}
+              aria-label="Toggle filters"
+            >
+              <Filter className="w-4 h-4" />
+              Filters
+            </button>
+            {(query || selectedOperators.length > 0 || priceRange[0] > 0 || priceRange[1] < 200) && (
               <button
                 className="px-3 py-2 rounded-lg bg-white/10 text-white light:bg-white/10 light:text-black"
-                onClick={() => setQuery('')}
-                aria-label="Clear search"
+                onClick={() => {
+                  setQuery('');
+                  setSelectedOperators([]);
+                  setPriceRange([0, 200]);
+                }}
+                aria-label="Clear all filters"
               >
-                Clear
+                <X className="w-4 h-4" />
               </button>
             )}
           </div>
+
+          {/* Filter Panel */}
+          {showFilters && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
+            >
+              <GlassCard className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Price Range */}
+                  <div>
+                    <label className="text-white/80 text-sm font-medium mb-2 block">
+                      Price Range: ₹{priceRange[0]} - ₹{priceRange[1]}
+                    </label>
+                    <div className="flex items-center gap-4">
+                      <input
+                        type="range"
+                        min="0"
+                        max="200"
+                        value={priceRange[0]}
+                        onChange={(e) => setPriceRange([Math.min(Number(e.target.value), priceRange[1] - 10), priceRange[1]])}
+                        className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-orange-400"
+                      />
+                      <input
+                        type="range"
+                        min="0"
+                        max="200"
+                        value={priceRange[1]}
+                        onChange={(e) => setPriceRange([priceRange[0], Math.max(Number(e.target.value), priceRange[0] + 10)])}
+                        className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-orange-400"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Operator Type */}
+                  <div>
+                    <label className="text-white/80 text-sm font-medium mb-2 block">
+                      Operator Type
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {['WBTC', 'CSTC', 'NBSTC', 'Private'].map((op) => (
+                        <button
+                          key={op}
+                          onClick={() => {
+                            setSelectedOperators((prev) =>
+                              prev.includes(op) ? prev.filter((o) => o !== op) : [...prev, op]
+                            );
+                          }}
+                          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                            selectedOperators.includes(op)
+                              ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
+                              : 'bg-white/5 text-white/70 hover:bg-white/10'
+                          }`}
+                        >
+                          {op}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Active Filters Summary */}
+                {(selectedOperators.length > 0 || priceRange[0] > 0 || priceRange[1] < 200) && (
+                  <div className="flex items-center gap-2 pt-2 border-t border-white/10">
+                    <span className="text-white/60 text-sm">Active filters:</span>
+                    {priceRange[0] > 0 || priceRange[1] < 200 ? (
+                      <span className="px-2 py-1 rounded bg-orange-500/20 text-orange-400 text-xs">
+                        ₹{priceRange[0]}-₹{priceRange[1]}
+                      </span>
+                    ) : null}
+                    {selectedOperators.map((op) => (
+                      <span key={op} className="px-2 py-1 rounded bg-blue-500/20 text-blue-400 text-xs flex items-center gap-1">
+                        {op}
+                        <button onClick={() => setSelectedOperators((prev) => prev.filter((o) => o !== op))}>
+                          <X className="w-3 h-3" />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </GlassCard>
+            </motion.div>
+          )}
         </div>
 
         <div className="space-y-8">
           {groupedRoutes.map((group) => {
             const filtered = group.routes.filter((r: RouteItem) => {
-              if (!normalizedQuery) return true;
-              if (
-                fuzzyMatch(r.busNumber, normalizedQuery) ||
-                fuzzyMatch(r.operator, normalizedQuery) ||
-                fuzzyMatch(r.from, normalizedQuery) ||
-                fuzzyMatch(r.to, normalizedQuery)
-              )
-                return true;
-              // check stops (full-text search across stops)
-              for (const s of r.stops) {
-                if (fuzzyMatch(s, normalizedQuery)) return true;
+              // Text search filter
+              if (normalizedQuery) {
+                const matchesText = fuzzyMatch(r.busNumber, normalizedQuery) ||
+                  fuzzyMatch(r.operator, normalizedQuery) ||
+                  fuzzyMatch(r.from, normalizedQuery) ||
+                  fuzzyMatch(r.to, normalizedQuery) ||
+                  r.stops.some((s) => fuzzyMatch(s, normalizedQuery));
+                if (!matchesText) return false;
               }
-              return false;
+
+              // Price filter
+              if (r.fare < priceRange[0] || r.fare > priceRange[1]) {
+                return false;
+              }
+
+              // Operator filter
+              if (selectedOperators.length > 0) {
+                const matchesOperator = selectedOperators.some((op) =>
+                  r.operator.toLowerCase().includes(op.toLowerCase())
+                );
+                if (!matchesOperator) return false;
+              }
+
+              return true;
             });
             if (filtered.length === 0) return null;
 
