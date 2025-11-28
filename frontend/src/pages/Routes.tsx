@@ -373,11 +373,10 @@ export default function Routes() {
                               prev.includes(op) ? prev.filter((o) => o !== op) : [...prev, op]
                             );
                           }}
-                          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                            selectedOperators.includes(op)
+                          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${selectedOperators.includes(op)
                               ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
                               : 'bg-white/5 text-white/70 hover:bg-white/10'
-                          }`}
+                            }`}
                         >
                           {op}
                         </button>
