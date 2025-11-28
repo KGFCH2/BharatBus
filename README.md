@@ -1,187 +1,401 @@
 # 🚍 BharatBus — Frontend (React + TypeScript)
 
-> A lightweight booking and tracking frontend for a bus service. This repository contains the frontend built with Vite, React + TypeScript, Tailwind-style utilities, and Framer Motion for animations.
+> A modern, feature-rich bus booking and tracking frontend for Indian bus services. Built with Vite, React + TypeScript, Tailwind CSS, and Framer Motion for smooth animations. Includes PDF ticket generation, toast notifications, form validation, and lazy-loaded pages for optimal performance.
 
 ---
 
-## ⚡ Quick summary
+## ⚡ Quick Summary
 
-- Built with: React + TypeScript, Vite, Framer Motion, Tailwind (utility-first CSS)
-- Primary UI features: booking flow, live tracking, operator dashboard, profile with ticket persistence
-- Local persistence: ticket artifacts and metadata are saved to localStorage for offline-friendly use
+| Feature | Description |
+|---------|-------------|
+| **Framework** | React 18+ with TypeScript |
+| **Build Tool** | Vite (fast HMR & optimized builds) |
+| **Styling** | Tailwind CSS + custom glow/glass utilities |
+| **Animations** | Framer Motion |
+| **PDF Generation** | jsPDF with QR code embedding |
+| **State** | React Context (Auth, Theme) |
+| **Notifications** | Custom Toast system |
+| **Form Validation** | Email regex, password strength indicator |
+| **Code Splitting** | React.lazy() for all pages |
 
 ---
 
-## 🧭 Project structure (important files)
+## 🆕 Recent Updates (v2.0)
+
+### ✨ New Features
+- **🔔 Toast Notification System** — Beautiful animated notifications for success, error, warning, and info messages
+- **🔒 Password Strength Indicator** — Visual feedback with requirements checklist during signup
+- **📧 Email Validation** — Real-time email format validation
+- **📱 Phone Number Validation** — Strictly numeric input (digits only)
+- **⚡ Lazy Loading** — All pages are code-split for faster initial load
+- **💀 Skeleton Loaders** — Smooth loading states while pages load
+- **🔍 Route Search & Filters** — Search by route code, operator, city + filter by price range and operator type
+- **🎫 Featured Routes** — Highlighted popular routes (Bus 81, Express 42, Metro Link)
+
+### 🛠 Improvements
+- Form validation with inline error messages
+- Loading spinner on form submission
+- Better accessibility (ARIA labels)
+- Cleaner error handling with toast feedback
+- Responsive filter panel for routes
+
+---
+
+## 🧭 Project Structure
 ```text
 /frontend
   ├─ public/                    # Static assets served at '/'
   │   ├─ favicon.svg
   │   ├─ favicon-32.png
-  │   └─ bus-stop.png (icons and fallbacks)
+  │   └─ bus-stop.png
   ├─ src/
-  │   ├─ components/           # Reusable UI pieces
-  │   │   ├─ FlipCard.tsx
-  │   │   ├─ Footer.tsx
-  │   │   ├─ GlassCard.tsx
-  │   │   ├─ GradientButton.tsx
-  │   │   ├─ Navbar.tsx
-  │   │   ├─ RouteMap.tsx
-  │   │   └─ TicketCard.tsx
-  │   ├─ context/              # React contexts (Auth, Theme)
-  │   │   └─ AuthContext.tsx
-  │   ├─ pages/                # Top-level route pages
-  │   │   ├─ BookTicket.tsx
-  │   │   ├─ Home.tsx
-  │   │   ├─ LiveTracking.tsx
-  │   │   ├─ LoginSignup.tsx
-  │   │   ├─ MyTickets.tsx
-  │   │   ├─ OperatorDashboard.tsx
-  │   │   └─ Routes.tsx
+  │   ├─ components/           # Reusable UI components
+  │   │   ├─ FlipCard.tsx      # 3D flip card for routes
+  │   │   ├─ Footer.tsx        # Site footer
+  │   │   ├─ GlassCard.tsx     # Glassmorphism card wrapper
+  │   │   ├─ GradientButton.tsx # Branded gradient button
+  │   │   ├─ Navbar.tsx        # Responsive navigation
+  │   │   ├─ PasswordStrength.tsx # 🆕 Password strength meter
+  │   │   ├─ ProtectedRoute.tsx # Auth route guard
+  │   │   ├─ RouteMap.tsx      # Route visualization
+  │   │   ├─ Skeleton.tsx      # 🆕 Loading skeleton components
+  │   │   ├─ TicketCard.tsx    # Ticket display card
+  │   │   ├─ Toast.tsx         # 🆕 Toast notification system
+  │   │   └─ Typewriter.tsx    # Typewriter text effect
+  │   ├─ context/              # React contexts
+  │   │   ├─ AuthContext.tsx   # Authentication state
+  │   │   ├─ ThemeContext.tsx  # Dark/light theme
+  │   │   └─ useAuth.ts        # Auth hook
+  │   ├─ pages/                # Route pages (lazy-loaded)
+  │   │   ├─ BookTicket.tsx    # Ticket booking form
+  │   │   ├─ FAQs.tsx          # FAQ page
+  │   │   ├─ HelpCenter.tsx    # Help & support
+  │   │   ├─ Home.tsx          # Landing page
+  │   │   ├─ LiveTracking.tsx  # Bus tracking
+  │   │   ├─ LoginSignup.tsx   # Auth forms with validation
+  │   │   ├─ MyTickets.tsx     # User's tickets
+  │   │   ├─ OperatorDashboard.tsx # Operator panel
+  │   │   ├─ PrivacyPolicy.tsx # Privacy page
+  │   │   ├─ Profile.tsx       # User profile
+  │   │   ├─ Routes.tsx        # Route listing with filters
+  │   │   └─ TermsOfService.tsx # Terms page
   │   ├─ utils/
-  │   │   └─ api.ts            # API helpers & localStorage utilities
-  │   ├─ App.tsx
-  │   ├─ index.css             # Global styles and glow utilities
+  │   │   ├─ api.ts            # API helpers
+  │   │   ├─ download.ts       # File download utility
+  │   │   └─ generateTicketPdf.ts # PDF ticket generator
+  │   ├─ App.tsx               # Main app with providers
+  │   ├─ index.css             # Global styles & utilities
   │   ├─ main.tsx              # React entry point
   │   └─ vite-env.d.ts
   ├─ index.html
   ├─ package.json
   ├─ vite.config.ts
   ├─ tsconfig.json
-  ├─ tsconfig.app.json
-  ├─ tsconfig.node.json
-  ├─ postcss.config.js
   ├─ tailwind.config.js
   └─ eslint.config.js
-
-README.md (this file)
 ```
 
 ---
 
-## 🚦 Flow overview
+## 🚦 Application Flow
 
 ```mermaid
 flowchart TD
   A[User visits Home] --> B{Authenticated?}
-  B -- Yes --> C[Show personalized Navbar & Profile link]
+  B -- Yes --> C[Show personalized Navbar & Profile]
   B -- No --> D[Show login/signup CTA]
-  C --> E[Search routes]
+  C --> E[Search/Browse Routes]
   D --> E
-  E --> F[Book Ticket form]
-  F --> G[Save ticket_meta to localStorage immediately]
-  G --> H[Generate PDF/image async and save]
-  H --> I[Dispatch sync event: Profile updates]
-  F --> J[If anonymous & later login — associateAnonymousTickets moves tickets to user index]
+  E --> F[Apply Filters - Price, Operator]
+  F --> G[Select Route & Book]
+  G --> H[Fill Booking Form with Validation]
+  H --> I[Generate PDF Ticket with QR]
+  I --> J[Save to localStorage & Show Success Toast]
+  J --> K[View in My Tickets / Profile]
+
+  subgraph validation
+    H --> V1[Email Format Check]
+    H --> V2[Password Strength]
+    H --> V3[Phone: Digits Only]
+  end
 
   subgraph persistence
-    G --> K[ticket-id-meta]
-    H --> L[ticket-id-img]
-    K --> M[tickets-user-userId-index]
+    I --> L[ticket_id_meta]
+    I --> M[ticket_id_img]
+    I --> N[tickets_user_userId]
   end
 ```
 
 ---
 
-## 🧩 Components & key UX details
+## 🧩 Key Components
 
-- `Navbar` — responsive top nav with animated box-shaped indicator (Framer Motion). Shows gender-based logo (male/female/neutral) and small emoji badge over avatar. Supports dark & light mode visuals.
-- `Home` — reduced-size search boxes on large screens, search button glows on hover, featured routes flip on hover.
-- `BookTicket` — saves ticket metadata (`ticket_<id>_meta`) immediately to localStorage so Profile sees it instantly; heavy asset generation (PDF, image) runs in background.
-- `Profile` — prefers `tickets_user_<userId>` index for lookup; listens for same-tab and cross-tab storage events to update the ticket list in real-time.
-- `LiveTracking` — animated preview; simplified anonymous view.
-- `OperatorDashboard` — (work-in-progress) planned glow effects for highlighted cards and buttons.
+### 🔔 Toast Notification System (`Toast.tsx`)
+```tsx
+import { useToast } from './components/Toast';
+
+const toast = useToast();
+toast.success('Booking confirmed!');
+toast.error('Payment failed');
+toast.warning('Session expiring soon');
+toast.info('New routes available');
+```
+
+### 🔒 Password Strength (`PasswordStrength.tsx`)
+Visual indicator showing:
+- ✅ At least 8 characters
+- ✅ Uppercase letter
+- ✅ Lowercase letter
+- ✅ Number
+- ✅ Special character
+
+### 💀 Skeleton Loaders (`Skeleton.tsx`)
+Pre-built patterns:
+- `<Skeleton variant="text" lines={3} />`
+- `<TicketCardSkeleton />`
+- `<RouteCardSkeleton />`
+- `<ProfileSkeleton />`
+
+### 🔍 Route Filters (`Routes.tsx`)
+- **Search**: Fuzzy matching by bus number, operator, origin, destination
+- **Price Range**: Slider filter ₹0 - ₹200
+- **Operator Type**: WBTC, CSTC, NBSTC, Private
 
 ---
 
-## 🧪 How to run (dev)
+## 🧪 Getting Started
 
-Open a terminal in the `frontend` folder and run:
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+
+### Installation & Development
 
 ```bash
-# Install deps (if not already)
+# Navigate to frontend directory
+cd frontend
+
+# Install dependencies
 npm install
 
-# Start dev server
+# Start development server
 npm run dev
 
-# Typecheck
+# Type checking
 npm run typecheck
 
-# Build
+# Production build
 npm run build
+
+# Preview production build
+npm run preview
+```
+
+### Environment Variables
+Create a `.env` file in the frontend directory:
+```env
+VITE_API_URL=http://localhost:3000/api
 ```
 
 ---
 
-## 🛠 Design decisions & conventions
+## 🎨 UI/UX Features
 
-- Local-only persistence for now: tickets and derived assets are kept in `localStorage` keys prefixed with `ticket_` for easy offline testing.
-- `normalizeGender()` utility is used to map many string inputs into `male` / `female` / `other` to ensure consistent avatar rendering.
-- Framer Motion `layoutId` is used for shared element transitions (Navbar indicator and a few card flip effects).
-- UI styling uses a Tailwind-like utility approach with a small set of custom glow utilities in `src/index.css`.
-
----
-
-## ✅ Current status & TODOs
-
-- ✅ Immediate ticket metadata persistence (`ticket_<id>_meta`) and per-user index (`tickets_user_<userId>`)
-- ✅ Profile listens to `storage` events and same-tab sync for instant updates
-- ✅ Navbar: gender-based logo + animated box indicator
-- ✅ Home: input size tweaks + glowing Search button
-- ✅ Featured Routes: flip-on-hover and bus icon in place of inline "Book Now"
-- ⏳ Operator dashboard glow effects (planned)
-- ⏳ Final backend integration and secure ticket storage (planned)
+| Feature | Description |
+|---------|-------------|
+| **Glassmorphism** | Frosted glass cards with backdrop blur |
+| **Gradient Buttons** | Orange-to-yellow branded gradients |
+| **Flip Cards** | 3D flip animation for route details |
+| **Glow Effects** | Neon glow on hover states |
+| **Dark/Light Mode** | System-aware + manual toggle |
+| **Responsive Design** | Mobile-first, works on all screen sizes |
+| **Smooth Animations** | Page transitions & micro-interactions |
 
 ---
 
-## 📦 Storage schema (localStorage)
+## 🛠 Architecture & Design Decisions
 
-- `ticket_<id>` - full ticket JSON (if saved)
-- `ticket_<id>_img` - image / preview (data URL)
-- `ticket_<id>_meta` - minimal metadata saved immediately after booking
-- `tickets_user_<userId>` - array of ticket ids owned by a user
+### Performance Optimizations
+- **Lazy Loading**: All page components use `React.lazy()` with `Suspense`
+- **Code Splitting**: Each route is a separate chunk
+- **Skeleton Loading**: Perceived performance boost with loading states
+- **Optimized Re-renders**: Proper use of `useCallback` and `useMemo`
+
+### Form Validation Strategy
+- Real-time validation on input change
+- Email: Regex pattern matching
+- Password: Strength meter with 5 requirements
+- Phone: Strictly numeric (non-digits stripped automatically)
+- Inline error messages with icons
+
+### State Management
+- **AuthContext**: User authentication state, login/logout/signup
+- **ThemeContext**: Dark/light mode preference
+- **Local State**: Form data, UI state managed with `useState`
+
+### Styling Conventions
+- Tailwind utility classes for rapid development
+- Custom CSS in `index.css` for glow/glass effects
+- CSS variables for theming
+- `light:` prefix for light mode overrides
 
 ---
 
-## 🔁 Sync & auth behavior
+## ✅ Feature Status
 
-- Same-tab: code dispatches a `tickets-updated` custom event to update components immediately.
-- Cross-tab: `window.addEventListener('storage', ...)` used to detect changes and refresh ticket lists.
-- On login/signup: `associateAnonymousTickets(userId)` transfers anonymous tickets to the user's index so their Profile shows them after authentication.
+### Completed ✅
+- [x] Toast notification system with 4 variants
+- [x] Password strength indicator with checklist
+- [x] Email validation with regex
+- [x] Phone number: digits-only enforcement
+- [x] Lazy loading for all pages
+- [x] Skeleton loading components
+- [x] Route search with fuzzy matching
+- [x] Route filters (price range, operator type)
+- [x] Featured routes section
+- [x] PDF ticket generation with QR codes
+- [x] Ticket persistence in localStorage
+- [x] Dark/light theme support
+- [x] Responsive navigation
+- [x] Gender-based avatar display
+
+### Planned 🚧
+- [ ] Backend API integration
+- [ ] Real payment gateway
+- [ ] Live GPS tracking
+- [ ] Push notifications
+- [ ] Multi-language support (i18n)
+- [ ] Seat selection UI
+- [ ] Ticket cancellation/refund
+- [ ] User reviews & ratings
+- [ ] PWA offline support
 
 ---
 
-## 🧭 Diagrams (component tree)
+## 📦 LocalStorage Schema
+
+| Key Pattern | Description |
+|-------------|-------------|
+| `ticket_<id>` | PDF data URI for the ticket |
+| `ticket_<id>_img` | QR code image data URL |
+| `ticket_<id>_meta` | Ticket metadata (JSON) |
+| `tickets_user_<userId>` | Array of ticket IDs owned by user |
+| `auth_user` | Current authenticated user object |
+
+### Ticket Meta Structure
+```json
+{
+  "id": "BBS123ABC",
+  "from": "Kolkata",
+  "to": "Siliguri",
+  "date": "2025-12-01",
+  "name": "John Doe",
+  "passengers": 2,
+  "phone": "9876543210",
+  "userId": "user_abc123"
+}
+```
+
+---
+
+## 🔁 Cross-Tab Sync & Events
+
+### Custom Events
+- `tickets-updated`: Dispatched when a ticket is created/modified
+- `storage`: Native event for cross-tab localStorage sync
+
+### Auth Flow
+1. User logs in → `auth_user` saved to localStorage
+2. Existing anonymous tickets can be associated with user
+3. On signup, old ticket keys are cleared to prevent phantom tickets
+4. Profile and MyTickets listen for storage events to refresh
+
+---
+
+## 🧭 Component Hierarchy
 
 ```mermaid
 flowchart TB
-  App --> Navbar
-  App --> MainRouter
-  MainRouter --> Home
-  MainRouter --> Routes
-  MainRouter --> BookTicket
-  MainRouter --> Profile
-  MainRouter --> LiveTracking
-  Home --> FeaturedRoutes
-  BookTicket --> TicketForm
-  Profile --> TicketCard
+  App --> AuthProvider
+  AuthProvider --> ThemeProvider
+  ThemeProvider --> ToastProvider
+  ToastProvider --> BrowserRouter
+  BrowserRouter --> Navbar
+  BrowserRouter --> Suspense
+  Suspense --> PageLoader[Skeleton Loader]
+  Suspense --> Routes
+  Routes --> Home
+  Routes --> RoutesPage[Routes with Filters]
+  Routes --> BookTicket
+  Routes --> MyTickets
+  Routes --> Profile
+  Routes --> LoginSignup
+  BrowserRouter --> Footer
 ```
 
 ---
 
-## ⚙️ Notes for later (backend integration)
+## ⚙️ Backend Integration Notes
 
-- When the backend is created:
-  - Replace localStorage writes with authenticated API calls.
-  - Keep the `ticket_<id>_meta` write locally as a cache until the server confirms persistence.
-  - Use the server to validate and merge anonymous tickets after authentication.
+When connecting to a backend:
+
+1. **API Endpoints** (suggested):
+   ```
+   POST /api/auth/login
+   POST /api/auth/signup
+   GET  /api/routes
+   POST /api/bookings
+   GET  /api/bookings/:userId
+   ```
+
+2. **Replace localStorage** with API calls but keep local cache for offline support
+
+3. **Add JWT tokens** for authenticated requests
+
+4. **Implement proper error handling** with toast notifications
 
 ---
 
-## 🙋‍♂️ Contributing & contact
+## 🔐 Security Considerations
 
-If you want me to continue, tell me which area to focus on next (dashboard glow, backend wiring, tests, performance), and I will proceed.
+- Passwords are not stored locally (only auth tokens should be)
+- Form inputs are sanitized (phone strips non-digits)
+- Email validation prevents malformed submissions
+- Protected routes redirect unauthenticated users
 
 ---
+
+## 📱 Browser Support
+
+- ✅ Chrome 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ Edge 90+
+- ✅ Mobile browsers (iOS Safari, Chrome Android)
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is for educational/demo purposes. Feel free to use and modify.
+
+---
+
+## 👨‍💻 Author
+
+**KGFCH2** — BharatBus Project
+
+---
+
+> Built with ❤️ using React, TypeScript, and Tailwind CSS
 
