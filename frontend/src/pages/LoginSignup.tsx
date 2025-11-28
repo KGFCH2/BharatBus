@@ -51,31 +51,31 @@ export default function LoginSignup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate form
     const newErrors: { email?: string; password?: string; name?: string } = {};
-    
+
     if (!emailRegex.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
-    
+
     if (formData.password.length < 6) {
       newErrors.password = 'Password must be at least 6 characters';
     }
-    
+
     if (!isLogin && formData.name.trim().length < 2) {
       newErrors.name = 'Please enter your full name';
     }
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       toast.error(Object.values(newErrors)[0] || 'Please fix the form errors');
       return;
     }
-    
+
     setErrors({});
     setIsSubmitting(true);
-    
+
     try {
       if (isLogin) {
         await login(formData.email, formData.password);
