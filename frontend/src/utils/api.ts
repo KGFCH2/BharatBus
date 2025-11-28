@@ -129,14 +129,12 @@ export const ticketsApi = useMock
 
 export const authApi = useMock
   ? {
-    // accept password param to match real API signature; password is ignored by mock
-    login: (email: string, password?: string) => {
-      void password;
+    // accept password param to match real API signature; params are ignored by mock
+    login: (_email: string, _password?: string) => {
       // Return no user for mock login
       return mockResponse({ user: null, token: null });
     },
-    signup: (name: string, email: string, password?: string) => {
-      void password;
+    signup: (_name: string, _email: string, _password?: string) => {
       // Return no user for mock signup
       return mockResponse({ user: null, token: null });
     },
