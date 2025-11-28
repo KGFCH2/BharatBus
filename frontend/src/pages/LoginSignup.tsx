@@ -1,10 +1,15 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, Bus } from 'lucide-react';
+import { Mail, Lock, User, Bus, AlertCircle } from 'lucide-react';
 import GlassCard from '../components/GlassCard';
 import GradientButton from '../components/GradientButton';
+import PasswordStrength from '../components/PasswordStrength';
 import { useAuth } from '../context/useAuth';
+import { useToast } from '../components/Toast';
+
+// Email validation regex
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function LoginSignup() {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,8 +19,11 @@ export default function LoginSignup() {
     password: '',
     gender: 'other',
   });
+  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login, signup, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
 
   interface TicketMeta {
     id: string;
@@ -43,9 +51,35 @@ export default function LoginSignup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form
+    const newErrors: { email?: string; password?: string; name?: string } = {};
+    
+    if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    if (!isLogin && formData.name.trim().length < 2) {
+      newErrors.name = 'Please enter your full name';
+    }
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      toast.error(Object.values(newErrors)[0] || 'Please fix the form errors');
+      return;
+    }
+    
+    setErrors({});
+    setIsSubmitting(true);
+    
     try {
       if (isLogin) {
         await login(formData.email, formData.password);
+        toast.success('Welcome back! Redirecting...');
         // refresh saved tickets after auth
         const tickets: TicketMeta[] = [];
         for (let i = 0; i < localStorage.length; i++) {
@@ -58,9 +92,10 @@ export default function LoginSignup() {
           }
         }
         setSavedTickets(tickets);
-        navigate('/tickets');
+        setTimeout(() => navigate('/tickets'), 1000);
       } else {
         await signup(formData.name, formData.email, formData.password, formData.gender as 'male' | 'female' | 'other');
+        toast.success('Account created successfully!');
         // After signup, clear all ticket keys and any per-user ticket index keys from localStorage
         // This prevents leftover `tickets_user_*` indexes (which may have been created during
         // associateAnonymousTickets) from causing phantom/placeholder tickets to appear.
@@ -72,11 +107,13 @@ export default function LoginSignup() {
         keysToRemove.forEach((k) => localStorage.removeItem(k));
         setSavedTickets([]);
         // Redirect to profile page after signup
-        navigate('/profile');
+        setTimeout(() => navigate('/profile'), 1000);
       }
     } catch (err) {
       console.error('Auth failed', err);
-      alert('Unable to authenticate. Please try again.');
+      toast.error('Unable to authenticate. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -169,7 +206,7 @@ export default function LoginSignup() {
                       <button
                         key={g}
                         type="button"
-                        aria-pressed={active ? 'true' : 'false'}
+                        aria-pressed={active}
                         onClick={() => setFormData({ ...formData, gender: g })}
                         className={`flex-1 px-4 py-3 text-sm font-medium transition-all focus:outline-none ${active ? 'bg-orange-500/20 text-orange-400 border-r border-white/10' : 'text-white hover:bg-white/10 hover:text-white'}`}
                       >
@@ -193,8 +230,14 @@ export default function LoginSignup() {
                 onChange={handleChange}
                 required
                 placeholder="Enter your email"
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all light:text-black light:placeholder-slate-600 light:bg-white light:border-gray-200"
+                className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${errors.email ? 'border-red-500' : 'border-white/20'} text-white placeholder-white/40 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all light:text-black light:placeholder-slate-600 light:bg-white light:border-gray-200`}
               />
+              {errors.email && (
+                <p className="text-red-400 text-xs flex items-center gap-1 mt-1">
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.email}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -209,8 +252,17 @@ export default function LoginSignup() {
                 onChange={handleChange}
                 required
                 placeholder="Enter your password"
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all light:text-black light:placeholder-slate-600 light:bg-white light:border-gray-200"
+                className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${errors.password ? 'border-red-500' : 'border-white/20'} text-white placeholder-white/40 focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-400/20 transition-all light:text-black light:placeholder-slate-600 light:bg-white light:border-gray-200`}
               />
+              {errors.password && (
+                <p className="text-red-400 text-xs flex items-center gap-1 mt-1">
+                  <AlertCircle className="w-3 h-3" />
+                  {errors.password}
+                </p>
+              )}
+              {!isLogin && formData.password && (
+                <PasswordStrength password={formData.password} />
+              )}
             </div>
 
             {isLogin && (
@@ -221,8 +273,19 @@ export default function LoginSignup() {
               </div>
             )}
 
-            <GradientButton type="submit" className="w-full text-lg py-3 mt-6" ariaLabel={isLogin ? 'Submit login form' : 'Submit signup form'}>
-              {isLogin ? 'Login' : 'Create Account'}
+            <GradientButton type="submit" className="w-full text-lg py-3 mt-6" ariaLabel={isLogin ? 'Submit login form' : 'Submit signup form'} disabled={isSubmitting}>
+              {isSubmitting ? (
+                <span className="flex items-center justify-center gap-2">
+                  <motion.span
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                    className="w-5 h-5 border-2 border-gray-900/30 border-t-gray-900 rounded-full"
+                  />
+                  Processing...
+                </span>
+              ) : (
+                isLogin ? 'Login' : 'Create Account'
+              )}
             </GradientButton>
           </form>
 
